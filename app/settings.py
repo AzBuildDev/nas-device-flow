@@ -20,6 +20,7 @@ class Settings:
     proxy_group:str='PROXY'
     auto_group:str='AUTO'
     core_config_path:str='/root/.config/mihomo/config.yaml'
+    dhcp_authoritative:bool=False
     dhcp_start:str='192.168.50.180'
     dhcp_end:str='192.168.50.249'
     direct_dns:list=field(default_factory=lambda:['https://dns.alidns.com/dns-query','https://doh.pub/dns-query'])
@@ -39,6 +40,7 @@ class Settings:
         origin=urlsplit(self.panel_origin)
         if origin.scheme not in ('http','https') or not origin.hostname or origin.path not in ('','/') or origin.username or origin.password or origin.query or origin.fragment:raise ValueError('Invalid panel origin')
         self.panel_origin=self.panel_origin.rstrip('/')
+        if type(self.dhcp_authoritative) is not bool:raise ValueError('dhcp_authoritative must be boolean')
         if int(ipaddress.ip_address(self.dhcp_start))>int(ipaddress.ip_address(self.dhcp_end)):raise ValueError('Invalid DHCP pool')
         if any(int(ipaddress.ip_address(self.dhcp_start))<=int(ipaddress.ip_address(x))<=int(ipaddress.ip_address(self.dhcp_end)) for x in self.excluded):raise ValueError('Infrastructure addresses must be outside DHCP pool')
         if not self.direct_dns or any(not isinstance(x,str) or not x.startswith('https://') for x in self.direct_dns):raise ValueError('Use HTTPS direct DNS resolvers')
@@ -56,6 +58,7 @@ class Settings:
         p=Path(data_dir)
         if any(c in str(p) for c in ('\n','\r',',')):raise ValueError('Invalid data path')
         lines=['port=0','interface='+self.interface,'bind-dynamic','no-resolv','no-hosts','user=root',f'dhcp-range={self.dhcp_start},{self.dhcp_end},{self.network.netmask},12h','dhcp-option=option:router,'+self.core_ip,'dhcp-option=option:dns-server,'+self.core_ip,'dhcp-option=tag:infrastructure,option:router,'+self.upstream,'dhcp-option=tag:infrastructure,option:dns-server,'+self.upstream,'dhcp-hostsfile='+str(p/'dhcp.hosts'),'dhcp-leasefile='+str(p/'dnsmasq.leases'),'log-facility=-']
+        if self.dhcp_authoritative:lines.append('dhcp-authoritative')
         return '\n'.join(lines)+'\n'
     @classmethod
     def load(cls,path):

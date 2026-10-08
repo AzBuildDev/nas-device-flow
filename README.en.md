@@ -17,7 +17,7 @@ This is a Linux Docker controller with a separate Mihomo process. It is not an O
 
 ## Status
 
-**0.1.0-rc.1 is an experimental prerelease.** The original running setup was used on a UGREEN DXP4800 with UGOS Pro, a bonded interface and a Huawei AX3. The generalized installer has passed 54 tests, Compose validation, an isolated image build, and offline startup/login checks. A fresh networked installation with DHCP cutover has not yet been validated. OpenWrt and MikroTik name adapters have mock tests only.
+**0.1.0-rc.2 is an experimental prerelease.** The original running setup was used on a UGREEN DXP4800 with UGOS Pro, a bonded interface and a Huawei AX3. The generalized installer has passed 64 tests, Compose validation, an isolated image build, and offline startup/login checks. A fresh networked installation with DHCP cutover has not yet been validated. OpenWrt and MikroTik name adapters have mock tests only.
 
 Linux Docker with macvlan is required for gateway deployment. macOS and Windows use the browser as clients; Docker Desktop cannot provide this macvlan gateway. [Docker documentation](https://docs.docker.com/engine/network/drivers/macvlan/)
 
@@ -62,3 +62,7 @@ Report reproducible issues with NAS/Linux/Docker/router versions and fictional I
 ## License
 
 Our controller and page use MIT. Mihomo and system packages retain their own licenses. See [third-party notices](THIRD_PARTY_NOTICES.md).
+
+An enabled switch means the policy is configured, not that the client is attached or a destination is reachable. Only clients actually using the NAS core gateway/DNS follow these rules. Check the active interface on multi-NIC computers. See [connection diagnostics](docs/diagnostics.md).
+
+Automatic network configuration is separate from device identity. With the same MAC, preferences persist; a changed private MAC creates a new default-direct device. Names do not grant automatic proxy authorization.

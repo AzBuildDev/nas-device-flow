@@ -1,4 +1,5 @@
 import importlib.util,json,sys,tempfile,unittest
+from unittest.mock import patch
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'app'))
@@ -24,6 +25,25 @@ class BootstrapTests(unittest.TestCase):
  def test_subnet_is_configurable(self):
   s=Settings(subnet='192.168.60.0/24',upstream='192.168.60.1',core_ip='192.168.60.250',panel_ip='192.168.60.254',dhcp_start='192.168.60.180',dhcp_end='192.168.60.249')
   self.assertTrue(s.valid_ip('192.168.60.180'));self.assertFalse(s.valid_ip('192.168.50.180'));self.assertIn('192.168.60.250',s.dnsmasq('/data/control-center'))
+ def test_authoritative_is_opt_in(self):
+  self.assertNotIn('dhcp-authoritative',Settings().dnsmasq('/tmp/demo'))
+  self.assertIn('dhcp-authoritative',Settings(dhcp_authoritative=True).dnsmasq('/tmp/demo'))
+ def test_authoritative_requires_boolean(self):
+  with self.assertRaises(ValueError):Settings(dhcp_authoritative='false')
+ def test_authoritative_enable_requires_explicit_sole_server_confirmation(self):
+  spec=importlib.util.spec_from_file_location('dhcp_command',ROOT/'scripts/dhcp.py')
+  d=importlib.util.module_from_spec(spec);spec.loader.exec_module(d)
+  with tempfile.TemporaryDirectory() as t:
+   with patch.object(d,'DATA',Path(t)),patch.object(d,'SETTINGS',Settings(dhcp_authoritative=True)),patch.object(d,'core') as core,patch.object(sys,'argv',['dhcp.py','enable','--confirm-main-router-dhcp-off']),patch('sys.stderr'):
+    with self.assertRaises(SystemExit):d.main()
+    core.assert_not_called();self.assertFalse((Path(t)/'dhcp.enabled').exists())
+ def test_confirmed_authoritative_enable_generates_config(self):
+  spec=importlib.util.spec_from_file_location('dhcp_confirmed',ROOT/'scripts/dhcp.py')
+  d=importlib.util.module_from_spec(spec);spec.loader.exec_module(d)
+  with tempfile.TemporaryDirectory() as t:
+   with patch.object(d,'DATA',Path(t)),patch.object(d,'SETTINGS',Settings(dhcp_authoritative=True)),patch.object(d,'core'),patch.object(sys,'argv',['dhcp.py','enable','--confirm-main-router-dhcp-off','--confirm-sole-dhcp-server']),patch('builtins.print'):
+    d.main()
+    self.assertTrue((Path(t)/'dhcp.enabled').exists());self.assertIn('dhcp-authoritative',(Path(t)/'dnsmasq.conf').read_text())
  def test_invalid_network_and_origin(self):
   for kwargs in ({'subnet':'8.8.8.0/24'},{'core_ip':'192.168.50.1'},{'panel_origin':'http://user:pass@example.invalid/'}):
    with self.assertRaises(ValueError):Settings(**kwargs)

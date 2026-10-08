@@ -3,7 +3,9 @@
   "upstream": "192.168.50.1",
   "core_ip": "192.168.50.250",
   "panel_ip": "192.168.50.254",
-  "infrastructure": ["192.168.50.10"],
+  "infrastructure": [
+    "192.168.50.10"
+  ],
   "interface": "eth0",
   "core_port": 9090,
   "panel_port": 9080,
@@ -15,5 +17,9 @@
   "core_config_path": "/root/.config/mihomo/config.yaml",
   "dhcp_start": "192.168.50.180",
   "dhcp_end": "192.168.50.249",
-  "direct_dns": ["https://dns.alidns.com/dns-query", "https://doh.pub/dns-query"]
+  "direct_dns": [
+    "https://dns.alidns.com/dns-query",
+    "https://doh.pub/dns-query"
+  ],
+  "dhcp_authoritative": false
 }

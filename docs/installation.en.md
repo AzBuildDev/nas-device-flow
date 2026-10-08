@@ -41,3 +41,21 @@ docker compose down
 ```
 
 There is no automatic failover. Keep private backups of runtime and .env. Never upload those files. Do not rerun initialize during updates; back up first and rebuild the controller.
+
+## First migration and old leases
+
+Disabling the router DHCP does not immediately replace client-side gateways from existing leases. Keep automatic IP/DNS. If reconnecting retains the old gateway, forget the Wi-Fi network and join again with its password. The server cannot force an immediate client configuration change.
+
+`dhcp_authoritative` defaults to false. Only enable it after confirming this controller is the sole DHCP server on the LAN, with the main router and any other DHCP services disabled. It can reject invalid old leases so clients request a fresh allocation, but cannot guarantee instant migration.
+
+Stop this controller DHCP first and wait for it to stop. If opting in, change dhcp_authoritative to true in private runtime/control-center/settings.json, then run:
+
+```sh
+docker compose exec controller python3 /app/dhcp.py enable --confirm-main-router-dhcp-off --confirm-sole-dhcp-server
+```
+
+The command regenerates dnsmasq configuration. Device status separately reports a valid lease and connections sampled within three minutes. A lease is configuration evidence; a core connection may be direct or a manually proxied connection. Neither proves successful proxy routing or successful browsing. In the original running environment, the user confirmed an iPad could rejoin by entering only the Wi-Fi password and browse successfully. Its private MAC changed, so the new record was explicitly enabled; this does not implement cross-MAC identity or automatic preference inheritance. Fresh installation of this generalized package remains unverified.
+
+## Updating from rc.1
+
+Back up runtime and .env privately, fetch rc.2, then run `sh scripts/update.sh`. It builds first, stops the controller with a 30-second grace period, and recreates only the controller while leaving the core and network in place. Do not use forced container removal; SIGTERM saves traffic counters. Updates do not automatically opt in to authoritative DHCP.

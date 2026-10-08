@@ -3,7 +3,7 @@
 import argparse,json,math,time
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
-DEVICES=[{'mac':'02:00:00:00:00:'+str(i).zfill(2),'ip':'192.168.50.'+str(100+i),'label':name,'name':name,'online':True,'enabled':i<3,'proxy_traffic':{'upload':i*1200000,'download':i*32000000,'total':i*33200000},'proxy_traffic_ok':True,'proxy_traffic_since':time.time()-3600} for i,name in enumerate(['iPhone 示例','电脑 示例','电视 示例','新设备 示例'],1)]
+DEVICES=[{'mac':'02:00:00:00:00:'+str(i).zfill(2),'ip':'192.168.50.'+str(100+i),'label':name,'name':name,'online':True,'enabled':i<3,'proxy_traffic':{'upload':i*1200000,'download':i*32000000,'total':i*33200000},'dhcp_assigned':True,'gateway_observed':i<3,'proxy_traffic_ok':True,'proxy_traffic_since':time.time()-3600} for i,name in enumerate(['iPhone 示例','电脑 示例','电视 示例','新设备 示例'],1)]
 class Demo(BaseHTTPRequestHandler):
  def log_message(self,*args):pass
  def send(self,obj,status=200):

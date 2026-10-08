@@ -1,6 +1,6 @@
 {
   "project": "nas-device-flow",
-  "version": "0.1.0-rc.1",
+  "version": "0.1.0-rc.2",
   "own_source_files": [
     "app/server.py",
     "app/device_names.py",
@@ -17,5 +17,12 @@
     "router firmware frontend code",
     "production screenshots",
     "unrelated workspace files"
+  ],
+  "additional_own_modules": [
+    "app/access_status.py",
+    "tests/test_access_status.py",
+    "scripts/dhcp_probe.py",
+    "scripts/isolated-dhcp-test.sh",
+    "scripts/update.sh"
   ]
 }

@@ -14,6 +14,7 @@ from device_traffic import DeviceTraffic, proxy_nodes, ip_owners
 from subscriptions import Subscriptions
 from urllib.parse import quote
 from settings import Settings
+from access_status import AccessStatus, valid_leases
 
 ROOT=Path(os.environ.get('NDF_DATA_ROOT','/data'))
 DATA=ROOT/'control-center'
@@ -22,6 +23,7 @@ HTML=Path(__file__).with_name('index.html')
 MAC=re.compile(r'^(?:[0-9a-f]{2}:){5}[0-9a-f]{2}$')
 LOCK=threading.RLock()
 STATS=TrafficStats()
+ACCESS=AccessStatus()
 DEVICE_TRAFFIC=None
 ROUTER_STATUS={'ok':False,'last_sync':0,'matched':0}
 SESSIONS={}; FAILURES={}; DHCP=None; LAST_ERROR=''; APPLIED=None
@@ -181,6 +183,7 @@ def collect_stats():
                             nodes=proxy_nodes(core('/proxies').get('proxies',{}),core('/providers/proxies').get('providers',{}));last_nodes=time.monotonic()
                         connections=core('/connections');last_connections=time.monotonic()
                         with LOCK: owners=ip_owners(load())
+                        ACCESS.sample(connections.get('connections') or [],owners)
                         DEVICE_TRAFFIC.sample(connections.get('connections') or [],owners,nodes)
                     STATS.update(json.loads(line),connections)
         except Exception:
@@ -232,7 +235,7 @@ def dhcp_supervisor():
         time.sleep(3)
 
 class Handler(BaseHTTPRequestHandler):
-    server_version='NASDeviceFlow/0.1.0-rc.1'
+    server_version='NASDeviceFlow/0.1.0-rc.2'
     def log_message(self,*args): pass
     def send(self,status,body,ctype='application/json',cookie=None):
         data=body.encode() if isinstance(body,str) else json.dumps(body,ensure_ascii=False).encode()
@@ -260,8 +263,11 @@ class Handler(BaseHTTPRequestHandler):
         if self.path=='/api/devices':
             with LOCK:
                 devices=list(load().values())
+                try: leases=valid_leases((DATA/'dnsmasq.leases').read_text())
+                except OSError: leases=set()
             traffic=DEVICE_TRAFFIC.snapshot()
             for d in devices:
+                d.update(ACCESS.status(d,leases))
                 d['proxy_traffic']=traffic['devices'].get(d['mac'],{'upload':0,'download':0,'total':0})
                 d['proxy_traffic_ok']=traffic['ok']
                 d['proxy_traffic_since']=traffic['since']

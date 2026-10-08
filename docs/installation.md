@@ -55,3 +55,23 @@ docker compose exec controller python3 /app/dhcp.py disable
 ## 更新
 
 备份 runtime 和 .env 到私有位置，拉取新版本后 docker compose up -d --build。不要重复 initialize 覆盖原部署。固定版本更新需要重新验收；回退代码/镜像时还原兼容的 runtime 备份。
+
+## 首次迁移的旧租约
+
+关闭主路由 DHCP 不会立即改写已连接客户端的旧默认网关。接管后设备仍应保持自动 IP/DNS；若重连仍保留旧租约，可忽略该 Wi-Fi 后重新输入密码加入。服务器无法立即强制修改客户端本地配置。
+
+`dhcp_authoritative` 默认 false。只有管理员确认 NAS 是同一 LAN 的唯一 DHCP 服务（已关闭主路由及其他服务）后，才可用于拒绝过期/无效旧租约，促使客户端重新获取。它不保证所有客户端立即重新接入，也不能代替实机验收。
+
+若选择启用：先关闭本控制器 DHCP 并等待停止，再将私有 runtime/control-center/settings.json 的 dhcp_authoritative 改为 true，然后使用以下命令。脚本重新生成 dnsmasq 配置；改变其他网络字段需要按部署步骤重新验收。
+
+```sh
+docker compose exec controller python3 /app/dhcp.py enable --confirm-main-router-dhcp-off --confirm-sole-dhcp-server
+```
+
+设备状态区分有效租约与最近三分钟核心连接。租约不证明设备使用该网关，核心连接也可能是直连或本机代理请求，不能证明国外站点已代理成功。见[接入诊断](diagnostics.md)。
+
+原运行环境已由用户确认 iPad 忽略旧 Wi-Fi 后仅输入密码重入并成功访问。重入时私人 MAC 改变，现场为新记录重新开启分流。这验证自动网络配置，不表示跨 MAC 自动继承开关。MAC变化仍作为新设备默认直连；不能凭设备名称继承授权。通用发布包干净安装仍待验收。
+
+## 从 rc.1 更新
+
+私下备份 runtime 和 .env，获取 rc.2 后执行 `sh scripts/update.sh`。先构建，再给控制器 30 秒正常退出时间，最后仅重建控制器；退出时保存流量，核心及网络保持运行。不要用强制删除替代正常停止。更新不会自动开启 authoritative DHCP。
