@@ -1,0 +1,19 @@
+{
+  "subnet": "192.168.50.0/24",
+  "upstream": "192.168.50.1",
+  "core_ip": "192.168.50.250",
+  "panel_ip": "192.168.50.254",
+  "infrastructure": ["192.168.50.10"],
+  "interface": "eth0",
+  "core_port": 9090,
+  "panel_port": 9080,
+  "panel_origin": "http://192.168.50.254:9080",
+  "bind": "0.0.0.0",
+  "provider": "subscription",
+  "proxy_group": "PROXY",
+  "auto_group": "AUTO",
+  "core_config_path": "/root/.config/mihomo/config.yaml",
+  "dhcp_start": "192.168.50.180",
+  "dhcp_end": "192.168.50.249",
+  "direct_dns": ["https://dns.alidns.com/dns-query", "https://doh.pub/dns-query"]
+}

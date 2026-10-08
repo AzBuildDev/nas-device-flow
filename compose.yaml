@@ -1,0 +1,42 @@
+name: nas-device-flow
+services:
+  mihomo:
+    image: ${MIHOMO_IMAGE:-metacubex/mihomo:v1.19.32@sha256:bac1a74de365ea59270ba134016762c6be05654d55246518de256113bd1c225e}
+    restart: unless-stopped
+    cap_drop: [ALL]
+    cap_add: [NET_ADMIN, NET_RAW, NET_BIND_SERVICE]
+    devices: [/dev/net/tun:/dev/net/tun]
+    security_opt: [no-new-privileges:true]
+    volumes: [./runtime:/root/.config/mihomo]
+    networks:
+      lan:
+        ipv4_address: ${CORE_IP:?Run initialize.py first}
+    mem_limit: 512m
+    logging:
+      driver: json-file
+      options: {max-size: 5m, max-file: '2'}
+  controller:
+    image: nas-device-flow-controller:0.1.0-rc.1
+    build: .
+    restart: unless-stopped
+    cap_drop: [ALL]
+    cap_add: [NET_ADMIN, NET_RAW, NET_BIND_SERVICE, SETUID, SETGID]
+    security_opt: [no-new-privileges:true]
+    volumes: [./runtime:/data]
+    networks:
+      lan:
+        ipv4_address: ${PANEL_IP:?Run initialize.py first}
+    mem_limit: 256m
+    cpus: 1
+    logging:
+      driver: json-file
+      options: {max-size: 5m, max-file: '2'}
+networks:
+  lan:
+    driver: macvlan
+    driver_opts:
+      parent: ${PARENT_INTERFACE:?Set a wired Linux LAN interface}
+    ipam:
+      config:
+        - subnet: ${LAN_SUBNET:?Set LAN subnet}
+          gateway: ${UPSTREAM_GATEWAY:?Set main router}

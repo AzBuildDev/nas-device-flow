@@ -1,0 +1,57 @@
+# 安装、验收与恢复
+
+此候选版本面向会管理 Linux 网络与 Docker 的试用者。请先备份主路由 DHCP 设置，保留一台可手动设 IP 的管理设备。
+
+## 先准备网络
+
+记录现有网段、网关、有线接口或聚合接口名。保留聚合，不创建替代原聚合的 LinuxBridge。确认交换机/AP 允许同一接口出现多个 MAC，关闭客户端隔离。
+
+核心和面板各占一个未使用的固定 IPv4。DHCP 地址池避开主路由、NAS、核心、面板及静态设备。NAS 的管理 IP 应设为固定且上级网关保持主路由；否则 NAS 可能把自己接管而失去管理路径。配置中的 infrastructure 只用于排除设备分流，不会替 NAS 设置静态 IP。
+
+编辑 config.local.json 的每个地址，包括 panel_origin（精确的浏览器访问地址）。容器 interface 保持 eth0；initialize 的 --parent 填宿主接口，如 bond0。MAC 保留偏好不能防伪造，不是网络准入认证。
+
+IPv4 是当前接管范围。主路由若下发公网 IPv6，客户端可能绕过 IPv4 策略；启用前关闭 LAN IPv6/RA，或自行完成独立的 IPv6 接管。不要宣称已实现完整 IPv6 分流。
+
+## 初始化和启动
+
+在项目目录执行 README 的初始化命令，使用独立的 16 字符以上面板密码。核心 API 密钥随机生成，浏览器无需记住。runtime、.env、*.local.json 都不应上传。
+
+可选基础设施 DHCP 保留文件的格式：
+
+```text
+02:00:00:00:00:10,set:infrastructure,192.168.50.10,infinite
+```
+
+这是虚构地址，实际 IP 必须在 infrastructure 中。用 --fixed-hosts /path/to/private.hosts 导入。也可以保持 NAS 自己的静态 IP，避免使用该文件。
+
+执行 docker compose config --quiet 后启动。控制面板地址使用配置的 panel_origin。初次启动需要下载镜像、规则数据库和订阅，等待 /api/devices 显示核心正常。DHCP 默认关闭。
+
+## 用一台设备试用
+
+暂时给测试设备设置同网段空闲 IP，网关和 DNS 指向核心 IP，关闭它的本机 VPN/系统代理。面板出现设备后，分别验证直连和智能分流开关。观察 /api/stats 数据、设备累计流量及订阅切换。验证国内站点可访问、选定代理站点实际经过代理，并在关闭后验证直连行为。应用长连接可能需要重开。
+
+## 自动接入
+
+仅在单设备验收通过后关闭主路由 DHCP，再执行：
+
+```sh
+docker compose exec controller python3 /app/dhcp.py enable --confirm-main-router-dhcp-off
+```
+
+恢复客户端自动 IP/DNS并更新 DHCP 租约。确认网关和 DNS 都是核心 IP，再逐台开启代理。新的设备默认直连。启用脚本只能验证核心 API 可访问，无法自动证明主路由 DHCP 已关闭或所有线路正常。
+
+公网不要映射面板、DNS、混合代理和核心 API 端口。局域网管理使用 HTTP，密码在局域网链路上没有 TLS 保护；有需要可自行加 HTTPS 反向代理并同步修改 panel_origin。未提供自动 TLS 配置。
+
+## 恢复到主路由
+
+```sh
+docker compose exec controller python3 /app/dhcp.py disable
+```
+
+等待至少 3 秒确认旁路 DHCP 停止，再开启主路由 DHCP，客户端更新租约。手动设置过 IP/DNS 的设备也要恢复自动获取。必要时先在管理设备手动设主路由网关/DNS。
+
+最后执行 docker compose down。不要先停核心再让全部设备等 DHCP 过期；没有自动故障接管。删除 runtime 会失去设备偏好、订阅和流量记录。
+
+## 更新
+
+备份 runtime 和 .env 到私有位置，拉取新版本后 docker compose up -d --build。不要重复 initialize 覆盖原部署。固定版本更新需要重新验收；回退代码/镜像时还原兼容的 runtime 备份。

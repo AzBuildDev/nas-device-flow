@@ -1,0 +1,7 @@
+*
+!app/
+!app/*.py
+!app/index.html
+!requirements.txt
+!scripts/
+!scripts/dhcp.py

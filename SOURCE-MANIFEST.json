@@ -1,0 +1,21 @@
+{
+  "project": "nas-device-flow",
+  "version": "0.1.0-rc.1",
+  "own_source_files": [
+    "app/server.py",
+    "app/device_names.py",
+    "app/huawei_router.py",
+    "app/router_adapters.py",
+    "app/traffic_stats.py",
+    "app/device_traffic.py",
+    "app/subscriptions.py",
+    "app/index.html"
+  ],
+  "excluded": [
+    "runtime credentials and configurations",
+    "device records and traffic ledgers",
+    "router firmware frontend code",
+    "production screenshots",
+    "unrelated workspace files"
+  ]
+}
