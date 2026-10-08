@@ -15,7 +15,8 @@ def checksum(data):
 
 def send(kind,requested=None,server=None,client='0.0.0.0'):
  boot=b'\x01\x01\x06\x00'+xid+struct.pack('!HH',0,0x8000)+socket.inet_aton(client)+b'\x00'*12+mac+b'\x00'*10+b'\x00'*192+b'\x63\x82\x53\x63'
- opts=b'\x35\x01'+bytes([kind])+b'\x3d\x07\x01'+mac+b'\x0c\x0dNAS-route-test'+b'\x37\x04\x01\x03\x06\x33'
+ hostname=b'NAS-route-test'
+ opts=b'\x35\x01'+bytes([kind])+b'\x3d\x07\x01'+mac+bytes([12,len(hostname)])+hostname+b'\x37\x04\x01\x03\x06\x33'
  if requested:opts+=b'\x32\x04'+socket.inet_aton(requested)
  if server:opts+=b'\x36\x04'+socket.inet_aton(server)
  payload=boot+opts+b'\xff';udp=struct.pack('!HHHH',68,67,8+len(payload),0)+payload

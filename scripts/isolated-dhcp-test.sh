@@ -10,7 +10,7 @@ tmp=$(mktemp -d)
 ns="ndf-client-$$"
 container="ndf-dhcp-test-$$"
 cleanup(){
- docker logs "$container" 2>/dev/null || true
+ docker exec "$container" cat /tmp/dhcp-start.log 2>/dev/null || true
  ip netns del "$ns" 2>/dev/null || true
  docker stop -t 5 "$container" >/dev/null 2>&1 || true
  docker rm "$container" >/dev/null 2>&1 || true
@@ -44,7 +44,7 @@ ip -n "$ns" link set eth0 address 02:00:00:00:00:01
 ip -n "$ns" link set eth0 up
 ip -n "$ns" link set lo up
 docker exec "$container" touch /tmp/dhcp.hosts
-docker exec -d "$container" sh -c 'dnsmasq --keep-in-foreground --conf-file=/tmp/dnsmasq.conf'
+docker exec -d "$container" sh -c 'dnsmasq --keep-in-foreground --conf-file=/tmp/dnsmasq.conf > /tmp/dhcp-start.log 2>&1'
 sleep 1
 args=(--expected-server "$server" --expected-gateway "$gateway" --expected-dns "$gateway" --prefix "$prefix")
 ip netns exec "$ns" env NDF_ISOLATED_DHCP_TEST=1 python3 scripts/dhcp_probe.py "${args[@]}" --old-ip "$old_ip" --exchange --release

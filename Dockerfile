@@ -5,5 +5,5 @@ COPY app/ /app/
 COPY scripts/dhcp.py /app/dhcp.py
 ENV PYTHONUNBUFFERED=1 NDF_DATA_ROOT=/data
 EXPOSE 9080
-HEALTHCHECK --interval=30s --timeout=5s --start-period=15s CMD python3 -c "import json,os; from urllib.request import urlopen; p=json.load(open(os.environ.get('NDF_DATA_ROOT','/data')+'/control-center/settings.json'))['panel_port']; urlopen('http://127.0.0.1:'+str(p)+'/health',timeout=3)" || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s CMD python3 -c "import json,os; from urllib.request import urlopen; p=json.load(open(os.environ.get('NDF_DATA_ROOT','/data')+'/control-center/settings.json')).get('panel_port',9080); urlopen('http://127.0.0.1:'+str(p)+'/health',timeout=3)" || exit 1
 CMD ["python3", "/app/server.py"]
