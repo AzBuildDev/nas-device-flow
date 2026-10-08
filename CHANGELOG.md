@@ -6,7 +6,8 @@
 - Add system, light and dark appearance modes in Settings; remember the choice in the browser, follow system changes in automatic mode and synchronize changes across tabs.
 - Apply the initial theme before painting and adapt traffic chart colors and the fictional demo banner.
 - Preserve the existing layout, device names, user content and routing/DNS behavior.
-- Expand the release suite to 82 tests. Fresh generic LAN installation, IPv6 and failover remain unverified or unimplemented.
+- Validation: 82 tests cover language and appearance behavior; full CI checks Compose, image build, offline startup and isolated DHCP migration. Original NAS deployment was verified separately without publishing private data.
+- Upgrade impact: no server configuration migration; existing device policies are retained, and language/appearance choices are browser-local. Fresh generic LAN installation, IPv6 and failover remain unverified or unimplemented.
 
 # 0.1.0-rc.3
 

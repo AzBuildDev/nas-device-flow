@@ -9,3 +9,5 @@
 ## Versioned prereleases
 
 Publish each update with a new version, Git tag, release notes and source archive plus SHA256 checksums. Keep previous releases and their assets available; do not replace an existing release with different source. Update runtime version fields, the source manifest, CI image tag and changelog together. Verify the final commit with the complete CI workflow and privacy checks before publishing.
+
+Any change to a distributed package requires a new version, including fixes. Published tags are immutable: never move a tag or overwrite an old release asset with changed contents. Each changelog section records changes, validation and upgrade impact. Runtime version fields, image tags and the source manifest must agree. Mark the new prerelease as latest while keeping older releases and assets downloadable.
