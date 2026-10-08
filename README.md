@@ -1,62 +1,75 @@
-# NAS Device Flow
+# 🧭 NAS Device Flow
 
-在网页中为每台设备打开或关闭智能分流。设备离开再回来，MAC 不变时保留开关；新设备默认直连。
+**Per-device smart routing for your home network.**
 
-版本：0.1.0-rc.2（预发布）。[English](README.en.md)
+English · [🌐 简体中文](README.zh-CN.md) · [Installation guide](docs/installation.en.md) · [Releases](https://github.com/Azusagawa0409/nas-device-flow/releases)
 
-![虚构设备演示，未连接真实网络](docs/images/demo.png)
+Give each device a direct or smart-routing switch. See its proxy traffic, manage subscriptions, and keep everyday controls in one small web panel.
 
-本地演示：`python3 scripts/demo.py`，打开 http://127.0.0.1:9088/。仅修改示例，不读取部署凭据。
+After DHCP setup, clients can join Wi-Fi with automatic IP and DNS. The panel runs on your Linux NAS alongside Mihomo; both services are defined in the same Docker Compose file.
 
-## 能做什么
+![Fictional device demo; no real network connected](docs/images/demo.png)
 
-- 自动收集 DHCP、邻居和 mDNS 设备信息，支持手动命名。
-- 按设备启用国内直连、其他流量按订阅规则代理。设备开关优先显示。
-- 展示核心实时上下行、连接数、趋势图，以及每台设备采样累计的代理流量。
-- 添加、切换和更新 Clash/Mihomo YAML 订阅，切换失败尝试恢复配置。
+## ✨ What you can do
 
-这是控制面板加 Mihomo 的 Linux Docker 部署方案。与 OpenClash、官方绿联软件及路由器厂商没有隶属关系。路由器型号识别取决于适配器返回的信息，不能保证识别所有设备。
+- **Control each device.** Choose direct access or smart routing, with preferences retained while its MAC stays the same.
+- **See network activity.** Live upload/download rates, a traffic chart, active connections and sampled proxy usage per device.
+- **Manage subscriptions.** Add, switch and refresh Clash/Mihomo YAML subscriptions.
+- **Choose your defaults.** A settings gear holds Chinese/English selection, the new-device default policy, admin password changes and connection details.
+- **Find your devices.** DHCP, neighbor records and mDNS provide discovery and names. Optional router adapters can add device information.
 
-## 部署
+New devices default to direct access. You can change this to smart routing in Settings; existing switches stay unchanged. A changed private MAC counts as a new device and follows that default, even if its name is familiar.
 
-需要 Linux NAS、Docker Compose、可用 macvlan 的有线接口，以及可设置 DHCP 的主路由。所有客户端与 NAS 处于同一局域网。
+Language selection is saved in your browser. Routing rules and DNS are configured separately: the initial China-direct / other-destinations-proxy rules reflect the original mainland-China setup.
+
+## 👀 Try the demo
+
+```sh
+python3 scripts/demo.py
+```
+
+Open http://127.0.0.1:9088/. Devices and traffic are fictional. The demo does not read deployment credentials or change your network.
+
+## 🚀 Deploy on a Linux NAS
+
+You need Linux Docker Compose, a wired interface that supports macvlan, and a main router whose DHCP service you can configure. Clients and the NAS must share the same LAN.
 
 ```sh
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 cp examples/settings.json config.local.json
-# 编辑 config.local.json：网段、上级网关、空闲核心/面板 IP、基础设施和 DHCP 地址池
+# Edit LAN addresses and panel_origin for your network.
+# Replace eth0 below with your NAS's actual wired interface.
 .venv/bin/python scripts/initialize.py --settings config.local.json --parent eth0
+
 docker compose config --quiet
 docker compose up -d --build
 ```
 
-初始化会交互读取新面板密码与订阅，生成私有 runtime 和 .env，不启动 DHCP。先按[部署说明](docs/installation.md)用一台测试设备验收，再切换 DHCP。不要直接在现有网络上照抄示例 IP。
+Initialization asks you to set and confirm an admin password and enter your subscription URL. The Mihomo API key is generated separately. Private credentials and device records stay in ignored runtime files.
 
-无需 macOS 或 Windows 客户端，设备通过浏览器管理。Docker Desktop 的 macvlan 不支持这两种系统，第一版只提供 Linux 服务端。[Docker 平台说明](https://docs.docker.com/engine/network/drivers/macvlan/)
+DHCP starts **off**. Follow the [installation and recovery guide](docs/installation.en.md), test one client, then complete the DHCP handover. Existing clients may need to forget and rejoin Wi-Fi once to replace an old lease.
 
-## 验证范围
+macOS, Windows, phones and tablets use the browser as clients. The gateway service runs on Linux; Docker Desktop does not provide this macvlan deployment. [Docker platform documentation](https://docs.docker.com/engine/network/drivers/macvlan/)
 
-原运行版已在绿联 DXP4800、UGOS Pro、聚合网口和Huawei TC7102（固件 10.0.5.61 SP3C30）环境使用。发布候选的通用初始化与 Compose 需要新环境试装验收，不能把原运行环境验证等同于所有 NAS 兼容。
+## 🧪 Project status
 
-华为适配器针对已验证固件；OpenWrt ubus 和 MikroTik REST 仅有模拟测试，默认关闭路由器适配器。见[兼容说明](docs/compatibility.md)。
+This is an experimental prerelease. The original setup is running on a UGREEN DXP4800 with UGOS Pro, a bonded interface and a Huawei TC7102. Source tests and isolated container/DHCP checks cover the generalized package; a fresh networked installation on another LAN still needs validation. OpenWrt and MikroTik device-name adapters have mock tests only.
 
-## 数据含义
+A switch means a policy is configured. It does not prove the client is using the NAS gateway or that a website is reachable. See [connection diagnostics](docs/diagnostics.md) and [compatibility notes](docs/compatibility.md).
 
-MB 使用十进制换算，1 MB = 1,000,000 字节。核心累计在核心重启后归零。设备代理流量从首次启用采样开始，保存到 runtime；短连接和停机期间可能漏计，仅供观察。图表统计经过核心的直连和代理流量，不能代表全局域网吞吐或套餐带宽。[详细说明](docs/metrics.md)
+IPv4 only, with no automatic failover if the NAS stops. Public IPv6 can bypass IPv4 rules. Keep the panel and core API on your LAN.
+
+Traffic uses decimal units: 1 MB = 1,000,000 bytes. Per-device totals are sampled, persisted estimates, not subscription billing. Charts describe traffic through Mihomo, not all LAN traffic. See [metric definitions](docs/metrics.md).
+
+## 🤝 Contribute
 
 ```sh
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-[贡献指南](CONTRIBUTING.md) · [安全边界](SECURITY.md) · [发布检查](docs/release-readiness.md)
+[Report an issue](https://github.com/Azusagawa0409/nas-device-flow/issues) with your NAS, Linux, Docker and router versions. Use fictional IP/MAC examples and redact credentials and logs. Hardware compatibility reports are welcome; distinguish real-device results from mocks.
 
-## 许可证
+[Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Release checks](docs/release-readiness.md)
 
-自己的面板代码采用 MIT，见 LICENSE。Mihomo、dnsmasq、PyYAML 等依赖保留各自许可，见 THIRD_PARTY_NOTICES.md。
-
-开关开启表示策略已配置，不代表设备已接入或网站必然可访问。只有实际使用 NAS 核心网关/DNS 的客户端才受控；多网卡电脑需核对当前出网接口。见[接入诊断](docs/diagnostics.md)。
-
-自动网络接入与设备身份分开：设备 IP/DNS 可保持自动，MAC 不变时保留策略；私人 MAC 改变会出现新设备，默认直连，不根据同名自动继承代理。
-
-面板密码在初始化时设置并二次确认，至少16字符；核心 API 密钥单独随机生成。目前支持登录、退出及失败限制，没有网页修改密码或重置向导。网页目前是中文，中文/English切换和地区分流预设为后续方向，尚未实现。默认国内直连规则及国内DNS针对中国大陆环境，不代表适用于所有地区。
+Our controller and web panel use the [MIT license](LICENSE). Mihomo and system packages retain their own licenses; see [third-party notices](THIRD_PARTY_NOTICES.md). This project is independent of OpenClash, UGREEN and router vendors.
