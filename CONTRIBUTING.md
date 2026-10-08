@@ -5,3 +5,7 @@
 不要提交订阅、凭据、真实设备列表、路由器响应全文、runtime 或真实家庭网络截图。复现材料使用 example.invalid、文档地址和虚构 MAC。
 
 第一阶段优先安装失败、设备偏好保留、分流准确性和恢复操作。复杂的节点编辑、手机客户端与订阅市场暂不加入。
+
+## Versioned prereleases
+
+Publish each update with a new version, Git tag, release notes and source archive plus SHA256 checksums. Keep previous releases and their assets available; do not replace an existing release with different source. Update runtime version fields, the source manifest, CI image tag and changelog together. Verify the final commit with the complete CI workflow and privacy checks before publishing.

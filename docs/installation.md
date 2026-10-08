@@ -76,8 +76,12 @@ docker compose exec controller python3 /app/dhcp.py enable --confirm-main-router
 
 私下备份 runtime 和 .env，获取 rc.2 后执行 `sh scripts/update.sh`。先构建，再给控制器 30 秒正常退出时间，最后仅重建控制器；退出时保存流量，核心及网络保持运行。不要用强制删除替代正常停止。更新不会自动开启 authoritative DHCP。
 
-## Updating to rc.3 / 更新到 rc.3
+## Updating to rc.4 / 更新到 rc.4
 
-Back up runtime and .env privately, fetch rc.3, and run `sh scripts/update.sh`. The controller stops gracefully before recreation. Existing device switches, subscriptions and sampled totals remain in runtime. Missing preferences.json defaults to direct only for newly discovered devices. The new settings menu allows language, future-device defaults and password changes; no DHCP/subnet migration is performed automatically.
+Back up runtime and .env privately, fetch rc.4, and run `sh scripts/update.sh`. The controller stops gracefully before recreation. Existing device switches, subscriptions and sampled totals remain in runtime. Missing preferences.json defaults to direct only for newly discovered devices. The new settings menu allows language, future-device defaults and password changes; no DHCP/subnet migration is performed automatically.
 
-更新前私下备份 runtime 和 .env，获取 rc.3 后运行 `sh scripts/update.sh`。已有设备开关保持，新设备初始默认直连；网页改密后需重新登录。普通设置不会变更 DHCP/网段。
+更新前私下备份 runtime 和 .env，获取 rc.4 后运行 `sh scripts/update.sh`。已有设备开关保持，新设备初始默认直连；网页改密后需重新登录。普通设置不会变更 DHCP/网段。
+
+rc.4 adds Japanese, Spanish and French plus System/Light/Dark appearance in the same package. Language and theme choices remain local to the browser; the layout and network configuration workflow are preserved. rc.3 remains available as its own release.
+
+rc.4 在同一包中新增日语、西班牙语、法语与跟随系统/浅色/深色外观，设置保存在浏览器。现版布局与网络配置流程保留；rc.3 独立版本仍保留下载。
