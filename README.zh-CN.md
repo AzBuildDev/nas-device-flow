@@ -30,27 +30,21 @@ python3 scripts/demo.py
 
 打开 [本地演示](http://127.0.0.1:9088/)。设备与流量都是虚构的，不读取部署凭据，也不修改真实网络。
 
-## 🚀 部署到 Linux NAS
+## 🚀 在 NAS 界面中安装
 
-需要 Linux Docker Compose、支持 macvlan 的有线接口，以及可以配置 DHCP 的主路由。NAS 与客户端应位于同一局域网。
+推荐使用[浏览器安装向导](docs/nas-gui-install.zh-CN.md)。无需 AI 接入 NAS、SSH、宿主机 Python 或手工修改 JSON。
 
-```sh
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-cp examples/settings.json config.local.json
-# 按实际网络填写所有地址和 panel_origin。
-# 将下面的 eth0 换成 NAS 的实际有线接口名。
-.venv/bin/python scripts/initialize.py --settings config.local.json --parent eth0
+1. 在 NAS 创建安装文件夹，在 Docker 的项目界面导入 [setup.compose.yaml](setup.compose.yaml)。只改文件顶部的文件夹路径。
+2. 启动安装项目，从容器日志复制安装访问码，打开 `http://NAS的IPv4地址:9088`。
+3. 在向导中确认接口、地址、密码和订阅，下载生成的正式部署文件。
+4. 停止安装项目，导入正式部署文件并启动。它包含面板和 Mihomo。
+5. 测试一台设备后关闭主路由 DHCP，在面板「设置 → 接入与统计」开启自动接入。
 
-docker compose config --quiet
-docker compose up -d --build
-```
+当前镜像面向 x86-64 Linux NAS，需要 Docker Compose 项目功能、macvlan 有线网络和 TUN 支持。已有部署不会被向导覆盖；DHCP 初始关闭。其他 NAS 的条件与路径见[手动部署说明](docs/nas-gui-install.zh-CN.md)。
 
-初始化时设置并二次确认管理密码，再输入订阅链接。Mihomo 核心密钥独立随机生成；密码、订阅和设备记录保存在被 Git 忽略的私有运行目录中。
+使用 SSH 的用户也可在源码目录运行 `sh scripts/install.sh`，由 Docker 运行交互向导，无需在 NAS 安装 Python。`--check` 只检查环境和接口，`--prepare-only` 只生成配置，`--start` 重试启动。原 JSON 初始化方式保留在[高级安装与恢复说明](docs/installation.md)。
 
-DHCP 默认关闭。先按[安装与恢复说明](docs/installation.md)验收一台设备，再接管 DHCP。已有设备可能需要一次忽略原 Wi-Fi 并重新加入，才能替换旧租约。
-
-macOS、Windows、手机和平板通过浏览器使用面板。网关服务运行在 Linux 上；Docker Desktop 不支持这套 macvlan 网关部署。[Docker 平台说明](https://docs.docker.com/engine/network/drivers/macvlan/)
+macOS、Windows、手机和平板通过浏览器使用面板；网关运行在 Linux NAS 上。[Docker 平台说明](https://docs.docker.com/engine/network/drivers/macvlan/)
 
 ## 🧪 当前状态
 

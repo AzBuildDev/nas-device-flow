@@ -1,5 +1,6 @@
 # 安装、验收与恢复
 
+优先使用[在 NAS 界面中手动安装](nas-gui-install.zh-CN.md)，不需要 SSH。以下保留终端和手工配置方式。
 此候选版本面向会管理 Linux 网络与 Docker 的试用者。请先备份主路由 DHCP 设置，保留一台可手动设 IP 的管理设备。
 
 ## 先准备网络
@@ -14,7 +15,17 @@ IPv4 是当前接管范围。主路由若下发公网 IPv6，客户端可能绕�
 
 ## 初始化和启动
 
-在项目目录执行 README 的初始化命令，使用独立的 16 字符以上面板密码。核心 API 密钥随机生成，浏览器无需记住。runtime、.env、*.local.json 都不应上传。
+在项目目录执行下面的命令（先编辑 config.local.json），使用独立的 16 字符以上面板密码。核心 API 密钥随机生成，浏览器无需记住。runtime、.env、*.local.json 都不应上传。
+
+```sh
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+cp examples/settings.json config.local.json
+# Edit addresses and panel_origin before initialization; use the actual host interface.
+.venv/bin/python scripts/initialize.py --settings config.local.json --parent eth0
+docker compose config --quiet
+docker compose up -d --build
+```
 
 可选基础设施 DHCP 保留文件的格式：
 

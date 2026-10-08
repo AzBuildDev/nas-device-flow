@@ -7,3 +7,5 @@ runtime/
 dist/
 .artifacts/
 *.local.json
+.ndf-install.lock
+.ndf-install-*/

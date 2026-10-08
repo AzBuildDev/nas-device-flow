@@ -1,5 +1,6 @@
 # Installation and recovery
 
+Prefer the [NAS GUI installer](nas-gui-install.md), which does not require SSH. The terminal/manual configuration path is retained below.
 This RC targets Linux NAS users comfortable with Docker and LAN configuration. Fresh networked installation is still unverified. Do not change DHCP until a single manually configured client works.
 
 ## Prepare
@@ -12,7 +13,17 @@ Disable LAN public IPv6/RA or implement your own IPv6 routing separately. This p
 
 ## Start and test one client
 
-Run the commands in the English README. Initialization creates private runtime and .env and refuses to overwrite them. Use a separate panel password of at least 16 characters. Open panel_origin in a LAN browser. Initial startup downloads the core, subscription and rule data.
+Run these commands in the project directory after editing config.local.json. Initialization creates private runtime and .env and refuses to overwrite them. Use a separate panel password of at least 16 characters. Open panel_origin in a LAN browser. Initial startup downloads the core, subscription and rule data.
+
+```sh
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+cp examples/settings.json config.local.json
+# Edit addresses and panel_origin before initialization; use the actual host interface.
+.venv/bin/python scripts/initialize.py --settings config.local.json --parent eth0
+docker compose config --quiet
+docker compose up -d --build
+```
 
 For one test client, assign an unused LAN IP and set gateway/DNS to core_ip. Disable local VPN/system proxy. Verify the client appears, switches work, domestic destinations go direct and a selected proxy destination actually uses a proxy. Close/reopen long-lived applications when switching. DHCP remains off during this test.
 

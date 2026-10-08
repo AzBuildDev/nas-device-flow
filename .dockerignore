@@ -2,6 +2,10 @@
 !app/
 !app/*.py
 !app/index.html
+!app/setup.html
 !requirements.txt
 !scripts/
 !scripts/dhcp.py
+!scripts/initialize.py
+!scripts/install.py
+!compose.yaml

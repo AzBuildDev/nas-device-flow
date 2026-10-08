@@ -4,7 +4,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 [[ $(id -u) == 0 ]] || { echo 'Run as root on a disposable Linux test host'; exit 1; }
 [[ $(uname -s) == Linux ]] || exit 1
-image=${NDF_TEST_IMAGE:-nas-device-flow-controller:0.1.0-rc.4}
+image=${NDF_TEST_IMAGE:-nas-device-flow-controller:0.1.0-rc.5}
 settings=${1:-examples/settings.json}
 tmp=$(mktemp -d)
 ns="ndf-client-$$"

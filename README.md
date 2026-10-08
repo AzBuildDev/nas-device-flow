@@ -33,27 +33,21 @@ python3 scripts/demo.py
 
 Open http://127.0.0.1:9088/. Devices and traffic are fictional. The demo does not read deployment credentials or change your network.
 
-## 🚀 Deploy on a Linux NAS
+## 🚀 Install through the NAS GUI
 
-You need Linux Docker Compose, a wired interface that supports macvlan, and a main router whose DHCP service you can configure. Clients and the NAS must share the same LAN.
+Use the [browser installer](docs/nas-gui-install.md). No AI connection to the NAS, SSH, host Python or JSON editing is required.
 
-```sh
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-cp examples/settings.json config.local.json
-# Edit LAN addresses and panel_origin for your network.
-# Replace eth0 below with your NAS's actual wired interface.
-.venv/bin/python scripts/initialize.py --settings config.local.json --parent eth0
+1. Create a NAS installation folder and import [setup.compose.yaml](setup.compose.yaml) in the Docker project interface. Edit only the folder path at the top.
+2. Start setup, copy the access code from container logs and open `http://NAS-IPv4-address:9088`.
+3. Confirm interfaces, addresses, password and subscription in the wizard. Download its production Compose file.
+4. Stop setup, import the downloaded file and start production. Both the panel and Mihomo are included.
+5. Test one client, disable router DHCP, then enable automatic joining in panel Settings → Network & stats.
 
-docker compose config --quiet
-docker compose up -d --build
-```
+The image targets x86-64 Linux NAS systems with Compose project support, wired macvlan and TUN. Existing state is never overwritten; DHCP starts OFF. See [manual installation](docs/nas-gui-install.md) for requirements and vendor path examples.
 
-Initialization asks you to set and confirm an admin password and enter your subscription URL. The Mihomo API key is generated separately. Private credentials and device records stay in ignored runtime files.
+SSH users can run `sh scripts/install.sh --lang en` in the source directory. Docker runs the interactive wizard, with no host Python requirement. Use `--check` for environment/interface checks, `--prepare-only` to save configuration without starting services and `--start` to retry startup. The original JSON initialization path remains in the [advanced installation guide](docs/installation.en.md).
 
-DHCP starts **off**. Follow the [installation and recovery guide](docs/installation.en.md), test one client, then complete the DHCP handover. Existing clients may need to forget and rejoin Wi-Fi once to replace an old lease.
-
-macOS, Windows, phones and tablets use the browser as clients. The gateway service runs on Linux; Docker Desktop does not provide this macvlan deployment. [Docker platform documentation](https://docs.docker.com/engine/network/drivers/macvlan/)
+macOS, Windows, phones and tablets use the browser as clients; the gateway runs on Linux. [Docker platform documentation](https://docs.docker.com/engine/network/drivers/macvlan/)
 
 ## 🧪 Project status
 

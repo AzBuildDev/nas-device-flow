@@ -1,3 +1,16 @@
+# 0.1.0-rc.5
+
+- Add a temporary browser installer for manual NAS Docker-GUI deployment, with Chinese/English instructions and a setup access code.
+- Detect wired, bonded and bridge LAN interfaces, actual IPv4 prefixes and gateways; suggest addresses and probe ARP conflicts. Sleeping devices and DHCP reservations still require operator verification.
+- Generate private runtime and a standalone production Compose file with absolute NAS mounts, including Mihomo and the controller; no SSH, host Python, JSON editing or image build is required for this path.
+- Refuse existing state, stage configuration writes privately and serialize competing installers. DHCP remains OFF during setup.
+- Add authenticated, CSRF-protected automatic-joining controls to panel Settings with client-test, router-DHCP-off and sole-server confirmations, plus recovery instructions in all five panel languages.
+- Allow the core and controller to read private 0700/0600 runtime created by a non-root NAS account using scoped DAC_OVERRIDE in their containers; no Docker socket or host-root mount is added.
+- Retain the manual initializer and add an optional Docker-based terminal wizard with preflight and retry-start modes.
+- Publish a versioned x86-64 controller image after tag CI passes. Correct the previous Compose image-label mismatch; published older tags remain unchanged.
+- Validation: 102 source tests pass locally; browser demo checks configuration, export and bilingual steps. Container and final CI results are recorded separately in release-readiness.md.
+- Upgrade impact: existing state and policies are retained. Existing operators do not rerun setup; GUI installs update image references while retaining network and runtime mounts. No automatic DHCP handover, IPv6 routing or failover is added. Fresh deployment on another real LAN remains unverified.
+
 # 0.1.0-rc.4
 
 - Add Japanese, Spanish and French alongside Chinese and English in the same installation package.

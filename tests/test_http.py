@@ -75,4 +75,34 @@ class HTTPTests(unittest.TestCase):
   auth=self.auth();payload={'current_password':'wrong','new_password':'fictional-new-admin-password','confirm_password':'fictional-new-admin-password'}
   for _ in range(8):self.assertEqual(self.request('/api/password',payload,auth)[0],403)
   self.assertEqual(self.request('/api/password',payload,auth)[0],429)
+ def test_dhcp_enable_requires_login_csrf_and_explicit_confirmations(self):
+  payload={'action':'enable','tested_client':True,'main_router_dhcp_off':True,'sole_dhcp_server':True}
+  self.assertEqual(self.request('/api/dhcp',payload)[0],401)
+  auth=self.auth()
+  self.assertEqual(self.request('/api/dhcp',payload,{'Cookie':auth['Cookie']})[0],403)
+  with patch.object(c,'core') as core:
+   for key in ('tested_client','main_router_dhcp_off','sole_dhcp_server'):
+    for value in (False,'true'):
+     self.assertEqual(self.request('/api/dhcp',dict(payload,**{key:value}),auth)[0],400)
+   core.assert_not_called()
+  self.assertFalse((c.DATA/'dhcp.enabled').exists())
+ def test_dhcp_marker_changes_only_after_core_check_and_recovery_confirmation(self):
+  auth=self.auth();payload={'action':'enable','tested_client':True,'main_router_dhcp_off':True,'sole_dhcp_server':True}
+  with patch.object(c,'core',side_effect=OSError('fixture')):
+   self.assertEqual(self.request('/api/dhcp',payload,auth)[0],503)
+  self.assertFalse((c.DATA/'dhcp.enabled').exists())
+  with patch.object(c,'core',return_value={'version':'fixture'}):
+   self.assertEqual(self.request('/api/dhcp',payload,auth)[0],200)
+  self.assertTrue((c.DATA/'dhcp.enabled').exists())
+  self.assertEqual((c.DATA/'dhcp.enabled').stat().st_mode&0o777,0o600)
+  self.assertEqual(self.request('/api/dhcp',{'action':'disable'},auth)[0],400)
+  self.assertTrue((c.DATA/'dhcp.enabled').exists())
+  self.assertEqual(self.request('/api/dhcp',{'action':'disable','confirm_recovery':True},auth)[0],200)
+  self.assertFalse((c.DATA/'dhcp.enabled').exists())
+ def test_dhcp_settings_distinguish_requested_and_running(self):
+  auth=self.auth();(c.DATA/'dhcp.enabled').touch()
+  with patch.object(c,'DHCP',None):
+   status,_,body=self.request('/api/settings',headers=auth)
+  self.assertEqual(status,200)
+  self.assertEqual(json.loads(body)['dhcp'],{'requested':True,'running':False,'authoritative':False})
 if __name__=='__main__':unittest.main()

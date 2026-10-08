@@ -28,6 +28,24 @@ ACCESS=AccessStatus()
 DEVICE_TRAFFIC=None
 ROUTER_STATUS={'ok':False,'last_sync':0,'matched':0}
 SESSIONS={}; FAILURES={}; DHCP=None; LAST_ERROR=''; APPLIED=None
+def dhcp_status():
+    return {'requested':(DATA/'dhcp.enabled').exists(),'running':DHCP is not None and DHCP.poll() is None,'authoritative':SETTINGS.dhcp_authoritative}
+
+def set_automatic_access(body):
+    marker=DATA/'dhcp.enabled'
+    action=body.get('action')
+    if action=='disable':
+        if body.get('confirm_recovery') is not True:raise ValueError('请确认恢复主路由 DHCP 的步骤')
+        marker.unlink(missing_ok=True)
+        return
+    if action!='enable':raise ValueError('自动接入参数无效')
+    if any(body.get(key) is not True for key in ('tested_client','main_router_dhcp_off','sole_dhcp_server')):
+        raise ValueError('请先验证测试设备，并确认主路由及其他 DHCP 已关闭')
+    core('/version')
+    config=SETTINGS.dnsmasq(DATA)
+    atomic(DATA/'dnsmasq.conf',config)
+    fd=os.open(marker,os.O_WRONLY|os.O_CREAT,0o600);os.close(fd)
+
 def valid_ip(value):
     return SETTINGS.valid_ip(value)
 
@@ -238,7 +256,7 @@ def dhcp_supervisor():
         time.sleep(3)
 
 class Handler(BaseHTTPRequestHandler):
-    server_version='NASDeviceFlow/0.1.0-rc.4'
+    server_version='NASDeviceFlow/0.1.0-rc.5'
     def log_message(self,*args): pass
     def send(self,status,body,ctype='application/json',cookie=None):
         data=body.encode() if isinstance(body,str) else json.dumps(body,ensure_ascii=False).encode()
@@ -259,7 +277,7 @@ class Handler(BaseHTTPRequestHandler):
         if not s: return self.send(401,{'error':'请登录'})
         if self.path=='/api/settings':
             with LOCK: preferences=load_preferences(DATA)
-            return self.send(200,{'preferences':preferences,'gateway':SETTINGS.core_ip,'upstream':SETTINGS.upstream,'panel_ip':SETTINGS.panel_ip,'subnet':SETTINGS.subnet,'routing':'China direct / other destinations via PROXY','app_version':'0.1.0-rc.4','csrf':s['csrf']})
+            return self.send(200,{'preferences':preferences,'gateway':SETTINGS.core_ip,'upstream':SETTINGS.upstream,'panel_ip':SETTINGS.panel_ip,'subnet':SETTINGS.subnet,'routing':'China direct / other destinations via PROXY','app_version':'0.1.0-rc.5','dhcp':dhcp_status(),'csrf':s['csrf']})
         if self.path=='/api/subscriptions':
             try: return self.send(200,subscription_info())
             except Exception: return self.send(503,{'error':'订阅信息读取失败'})
@@ -313,6 +331,13 @@ class Handler(BaseHTTPRequestHandler):
         s=self.session()
         if not s: return self.send(401,{'error':'请登录'})
         if not hmac.compare_digest(self.headers.get('X-CSRF-Token',''),s['csrf']): return self.send(403,{'error':'请求验证失败'})
+        if self.path=='/api/dhcp':
+            with LOCK:
+                try:set_automatic_access(body)
+                except ValueError as e:return self.send(400,{'error':str(e)})
+                except Exception:return self.send(503,{'error':'核心尚未连接，自动接入未开启'})
+                result=dhcp_status()
+            return self.send(200,{'ok':True,'dhcp':result})
         if self.path=='/api/settings':
             with LOCK:
                 try: result=save_preferences(DATA,body,atomic)

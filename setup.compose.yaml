@@ -1,0 +1,28 @@
+# NAS Docker GUI: change this ONE path to an existing folder on your NAS.
+# 只改下面这一处：NAS 上用来保存配置的文件夹绝对路径。
+x-project-path: &project-path /volume1/docker/nas-device-flow
+name: nas-device-flow-setup
+services:
+  setup:
+    image: ghcr.io/azbuilddev/nas-device-flow-controller:0.1.0-rc.5
+    network_mode: host
+    restart: "no"
+    cap_drop: [ALL]
+    cap_add: [NET_RAW, DAC_OVERRIDE]
+    security_opt: [no-new-privileges:true]
+    environment:
+      NDF_PROJECT_PATH: *project-path
+      NDF_SETUP_PORT: '9088'
+      PYTHONUNBUFFERED: '1'
+    volumes:
+      - type: bind
+        source: *project-path
+        target: /workspace
+    entrypoint: [python3, /app/setup_server.py]
+    healthcheck:
+      disable: true
+    mem_limit: 256m
+    cpus: 1
+    logging:
+      driver: json-file
+      options: {max-size: 1m, max-file: '2'}

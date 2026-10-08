@@ -17,3 +17,7 @@
 设备名称不是唯一标识。MAC 改变会出现新的设备；MAC 不变、IP 改变会保留偏好。最近在线指近期网络响应，不保证此刻在线。主路由展示的型号可能只是厂商判断或用户备注，不等同于硬件身份认证。
 
 参考：[Docker macvlan](https://docs.docker.com/engine/network/drivers/macvlan/)、[OpenWrt ubus](https://openwrt.org/docs/techref/ubus)、[MikroTik REST API](https://manual.mikrotik.com/docs/developer-guides/rest-api/)。
+
+## NAS 手动安装入口
+
+rc.5 提供通用 Compose 安装项目与中英文浏览器向导。当前预构建镜像为 linux/amd64；NAS Docker GUI 需要允许 host、macvlan、TUN 与绝对目录挂载。保留有线聚合或桥接接口。绿联 UGOS Pro 项目创建和导入入口已核对，既有 bond0 的只读识别及 ARP 占用检测已实机验证；完整另一 LAN 的 GUI 干净安装仍待验收。群晖、威联通等文档路径示例并不代表正式支持或实机通过。ARM NAS 暂未提供已验收预构建镜像。

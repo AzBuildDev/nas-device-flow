@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Generate private state without starting networking or DHCP."""
-import argparse,getpass,ipaddress,json,os,re,secrets,sys
+import argparse,fcntl,getpass,ipaddress,json,os,re,secrets,sys,tempfile
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'app'))
 import yaml
@@ -34,7 +34,7 @@ def validate_fixed_hosts(settings, text):
 
 def initialize(project,config,admin_password,url,fixed_hosts=''):
     settings=Settings(**config);validate_url(url);validate_fixed_hosts(settings,fixed_hosts)
-    if len(admin_password)<16:raise ValueError('Use at least 16 characters for the panel password')
+    if not 16<=len(admin_password)<=256 or admin_password!=admin_password.strip():raise ValueError('Use 16 to 256 characters without leading/trailing spaces for the panel password')
     project=Path(project);runtime=project/'runtime';data=runtime/'control-center'
     if runtime.exists():raise ValueError('runtime already exists; never overwrite an existing deployment')
     # Compose creates macvlan interfaces named eth0; choose pool/settings before bootstrap.
@@ -52,6 +52,35 @@ def initialize(project,config,admin_password,url,fixed_hosts=''):
     private_write(data/'fixed.hosts',fixed_hosts);private_write(data/'dhcp.hosts',fixed_hosts)
     return settings
 
+def bootstrap(project,config,admin_password,url,parent,fixed_hosts='',deployment=None):
+    """Commit validated private state; serialize installers and never replace state."""
+    if not re.fullmatch(r'[A-Za-z0-9_.:-]{1,32}',parent):raise ValueError('Invalid parent interface')
+    project=Path(project)
+    lock_fd=os.open(project/'.ndf-install.lock',os.O_WRONLY|os.O_CREAT|os.O_NOFOLLOW,0o600)
+    with os.fdopen(lock_fd,'w') as lock:
+        fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        if any(os.path.lexists(project/name) for name in ('.env','runtime','deployment.compose.yaml')):
+            raise ValueError('Existing .env/runtime found; bootstrap refuses to overwrite')
+        with tempfile.TemporaryDirectory(prefix='.ndf-install-',dir=project) as tmp:
+            staged=Path(tmp)
+            settings=initialize(staged,config,admin_password,url,fixed_hosts)
+            env=f'LAN_SUBNET={settings.subnet}\nUPSTREAM_GATEWAY={settings.upstream}\nPARENT_INTERFACE={parent}\nCORE_IP={settings.core_ip}\nPANEL_IP={settings.panel_ip}\n'
+            private_write(staged/'.env',env)
+            if deployment is not None:private_write(staged/'deployment.compose.yaml',deployment)
+            # O_EXCL-equivalent hard link prevents replacing an independently created .env.
+            os.link(staged/'.env',project/'.env')
+            linked=False
+            try:
+                if deployment is not None:
+                    os.link(staged/'deployment.compose.yaml',project/'deployment.compose.yaml');linked=True
+                if os.path.lexists(project/'runtime'):raise ValueError('runtime appeared during installation')
+                (staged/'runtime').rename(project/'runtime')
+            except BaseException:
+                (project/'.env').unlink()
+                if linked:(project/'deployment.compose.yaml').unlink()
+                raise
+            return settings
+
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--settings',type=Path,default=Path('examples/settings.json'));p.add_argument('--parent',required=True);p.add_argument('--fixed-hosts',type=Path);a=p.parse_args()
     if not __import__('re').fullmatch(r'[A-Za-z0-9_.:-]{1,32}',a.parent):raise SystemExit('Invalid parent interface')
@@ -61,8 +90,6 @@ def main():
     password=getpass.getpass('New panel password (16+ characters): ')
     if password!=getpass.getpass('Confirm panel password: '):raise SystemExit('Passwords differ')
     url=getpass.getpass('Clash/Mihomo subscription URL (hidden): ')
-    settings=initialize(project,config,password,url,a.fixed_hosts.read_text() if a.fixed_hosts else '')
-    env=f'LAN_SUBNET={settings.subnet}\nUPSTREAM_GATEWAY={settings.upstream}\nPARENT_INTERFACE={a.parent}\nCORE_IP={settings.core_ip}\nPANEL_IP={settings.panel_ip}\n'
-    private_write(project/'.env',env)
+    bootstrap(project,config,password,url,a.parent,a.fixed_hosts.read_text() if a.fixed_hosts else '')
     print('Private runtime created. DHCP is OFF. Review docs/installation.md before docker compose up.')
 if __name__=='__main__':main()
