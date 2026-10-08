@@ -17,7 +17,7 @@ This is a Linux Docker controller with a separate Mihomo process. It is not an O
 
 ## Status
 
-**0.1.0-rc.2 is an experimental prerelease.** The original running setup was used on a UGREEN DXP4800 with UGOS Pro, a bonded interface and a Huawei AX3. The generalized installer has passed 64 tests, Compose validation, an isolated image build, and offline startup/login checks. A fresh networked installation with DHCP cutover has not yet been validated. OpenWrt and MikroTik name adapters have mock tests only.
+**0.1.0-rc.2 is an experimental prerelease.** The original running setup was used on a UGREEN DXP4800 with UGOS Pro, a bonded interface and a Huawei TC7102 (firmware 10.0.5.61 SP3C30). The generalized installer has passed 64 tests, Compose validation, an isolated image build, and offline startup/login checks. A fresh networked installation with DHCP cutover has not yet been validated. OpenWrt and MikroTik name adapters have mock tests only.
 
 Linux Docker with macvlan is required for gateway deployment. macOS and Windows use the browser as clients; Docker Desktop cannot provide this macvlan gateway. [Docker documentation](https://docs.docker.com/engine/network/drivers/macvlan/)
 
@@ -66,3 +66,5 @@ Our controller and page use MIT. Mihomo and system packages retain their own lic
 An enabled switch means the policy is configured, not that the client is attached or a destination is reachable. Only clients actually using the NAS core gateway/DNS follow these rules. Check the active interface on multi-NIC computers. See [connection diagnostics](docs/diagnostics.md).
 
 Automatic network configuration is separate from device identity. With the same MAC, preferences persist; a changed private MAC creates a new default-direct device. Names do not grant automatic proxy authorization.
+
+The panel password is set and confirmed during initialization (16+ characters). The core API key is independently generated. Login/logout and failed-login limiting are implemented; there is no in-page password change or reset wizard. Browser language selection is planned, not implemented. Default China-direct rules and domestic DNS reflect the original mainland-China setup, not a universal regional preset.
