@@ -21,3 +21,15 @@ The original setup runs on my UGREEN NAS with a bonded interface and a Huawei AX
 Code: https://github.com/AzBuildDev/nas-device-flow
 
 I would welcome feedback on the installation guide and device routing behavior. Please do not share real subscriptions, passwords or unredacted network logs.
+
+## Published on 2026-10-08
+
+GitHub username: AzBuildDev. Display name: A.z. Repository and future local commit identity were updated after the rename. Existing commit history was preserved.
+
+DEV developer article, published as A.z / azbuilddev:
+https://dev.to/azbuilddev/i-built-a-nas-dashboard-for-per-device-smart-routing-hgg
+
+Reddit developer introduction, posted as AzBuild in the pinned r/selfhosted New Project Megathread:
+https://www.reddit.com/r/selfhosted/comments/1wvclw4/comment/pemzsls/
+
+Both posts explain the prerelease status, Linux gateway requirement, DHCP migration, MAC identity, sampled counters and AI assistance. Only fictional devices were used in the article screenshot. Reddit submission success and the comment permalink were verified in the signed-in interface; later moderation decisions remain outside our control.
