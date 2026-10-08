@@ -2,7 +2,7 @@
 
 **Per-device smart routing for your home network.**
 
-English · [🌐 简体中文](README.zh-CN.md) · [Installation guide](docs/installation.en.md) · [Releases](https://github.com/Azusagawa0409/nas-device-flow/releases)
+English · [🌐 简体中文](README.zh-CN.md) · [Installation guide](docs/installation.en.md) · [Releases](https://github.com/AzBuildDev/nas-device-flow/releases)
 
 Give each device a direct or smart-routing switch. See its proxy traffic, manage subscriptions, and keep everyday controls in one small web panel.
 
@@ -68,7 +68,7 @@ Traffic uses decimal units: 1 MB = 1,000,000 bytes. Per-device totals are sample
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-[Report an issue](https://github.com/Azusagawa0409/nas-device-flow/issues) with your NAS, Linux, Docker and router versions. Use fictional IP/MAC examples and redact credentials and logs. Hardware compatibility reports are welcome; distinguish real-device results from mocks.
+[Report an issue](https://github.com/AzBuildDev/nas-device-flow/issues) with your NAS, Linux, Docker and router versions. Use fictional IP/MAC examples and redact credentials and logs. Hardware compatibility reports are welcome; distinguish real-device results from mocks.
 
 [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Release checks](docs/release-readiness.md)
 

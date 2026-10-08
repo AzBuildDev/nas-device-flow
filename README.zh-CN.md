@@ -2,7 +2,7 @@
 
 **在一个网页里，控制每台设备的智能分流。**
 
-[🌐 English](README.md) · 简体中文 · [部署说明](docs/installation.md) · [发布版本](https://github.com/Azusagawa0409/nas-device-flow/releases)
+[🌐 English](README.md) · 简体中文 · [部署说明](docs/installation.md) · [发布版本](https://github.com/AzBuildDev/nas-device-flow/releases)
 
 给手机、电脑、平板分别打开或关闭分流，查看设备代理流量，管理订阅。日常最常用的设备开关放在主页面，其他选项收进小齿轮设置。
 
@@ -68,7 +68,7 @@ macOS、Windows、手机和平板通过浏览器使用面板。网关服务运�
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-欢迎[反馈问题](https://github.com/Azusagawa0409/nas-device-flow/issues)或提交兼容报告。附上 NAS、Linux、Docker 和路由器版本，用虚构 IP/MAC 举例，并去掉凭据与敏感日志。请注明结果来自实机还是模拟测试。
+欢迎[反馈问题](https://github.com/AzBuildDev/nas-device-flow/issues)或提交兼容报告。附上 NAS、Linux、Docker 和路由器版本，用虚构 IP/MAC 举例，并去掉凭据与敏感日志。请注明结果来自实机还是模拟测试。
 
 [贡献指南](CONTRIBUTING.md) · [安全说明](SECURITY.md) · [发布检查](docs/release-readiness.md)
 

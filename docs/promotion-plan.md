@@ -1,6 +1,6 @@
 # Developer-led sharing
 
-Use the maintainer's developer identity, not an official project brand. Keep personal social accounts separate. GitHub uses the existing Azusagawa0409 account.
+Use the maintainer's developer identity, not an official project brand. Keep personal social accounts separate. GitHub uses the existing AzBuildDev account.
 
 Start with the repository and an English developer write-up. Share why the tool was built, show fictional devices and a switch, describe the architecture and limits, and link to the code. Avoid claims of universal compatibility or a stable release.
 
@@ -18,6 +18,6 @@ The main screen is a device list with one switch per device. New devices default
 
 The original setup runs on my UGREEN NAS with a bonded interface and a Huawei AX3. This is an experimental RC: the generalized installer has offline tests, but a fresh networked DHCP cutover is still unverified. IPv6 and automatic failover are not implemented.
 
-Code: https://github.com/Azusagawa0409/nas-device-flow
+Code: https://github.com/AzBuildDev/nas-device-flow
 
 I would welcome feedback on the installation guide and device routing behavior. Please do not share real subscriptions, passwords or unredacted network logs.
