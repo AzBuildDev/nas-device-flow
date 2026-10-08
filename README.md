@@ -15,12 +15,15 @@ After DHCP setup, clients can join Wi-Fi with automatic IP and DNS. The panel ru
 - **Control each device.** Choose direct access or smart routing, with preferences retained while its MAC stays the same.
 - **See network activity.** Live upload/download rates, a traffic chart, active connections and sampled proxy usage per device.
 - **Manage subscriptions.** Add, switch and refresh Clash/Mihomo YAML subscriptions.
-- **Choose your defaults.** A settings gear holds Chinese/English selection, the new-device default policy, admin password changes and connection details.
+- **Choose your defaults.** A settings gear holds Chinese, English, Japanese, Spanish and French selection, the new-device default policy, admin password changes and connection details.
+- **Choose your appearance.** System, light or dark mode in Settings, remembered in your browser. Charts follow the theme.
 - **Find your devices.** DHCP, neighbor records and mDNS provide discovery and names. Optional router adapters can add device information.
 
 New devices default to direct access. You can change this to smart routing in Settings; existing switches stay unchanged. A changed private MAC counts as a new device and follows that default, even if its name is familiar.
 
-Language selection is saved in your browser. Routing rules and DNS are configured separately: the initial China-direct / other-destinations-proxy rules reflect the original mainland-China setup.
+All five interface languages ship in one package. The initial language follows the browser, including regional variants; unsupported languages fall back to English. Manual language selection is saved in your browser. Routing rules and DNS are configured separately: the initial China-direct / other-destinations-proxy rules reflect the original mainland-China setup.
+
+![Fictional English demo in dark mode](docs/images/demo-dark.jpg)
 
 ## 👀 Try the demo
 

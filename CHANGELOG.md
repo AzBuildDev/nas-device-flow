@@ -1,3 +1,13 @@
+# 0.1.0-rc.4
+
+- Add Japanese, Spanish and French alongside Chinese and English in the same installation package.
+- Translate login, settings, device status, subscriptions, errors, help and confirmation text, including appearance controls in every language.
+- Detect regional browser language preferences and fall back to English for unsupported languages; remember manual selection locally.
+- Add system, light and dark appearance modes in Settings; remember the choice in the browser, follow system changes in automatic mode and synchronize changes across tabs.
+- Apply the initial theme before painting and adapt traffic chart colors and the fictional demo banner.
+- Preserve the existing layout, device names, user content and routing/DNS behavior.
+- Expand the release suite to 82 tests. Fresh generic LAN installation, IPv6 and failover remain unverified or unimplemented.
+
 # 0.1.0-rc.3
 
 - Add a settings gear with General, Password, Access/Statistics and subscription shortcut.

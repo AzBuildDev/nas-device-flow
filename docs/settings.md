@@ -2,7 +2,13 @@
 
 ## Language
 
-One package supports Chinese and English. The gear is accessible before login, so the login screen can be translated too. The initial selection follows the browser; manual Chinese/English or automatic choice is remembered in that browser. It does not change other users' language or routing/DNS.
+One package supports Chinese, English, Japanese, Spanish and French. The gear is accessible before login, so the login screen can be translated too. The initial selection follows the browser; manual selection of any of the five languages or automatic choice is remembered in that browser. It does not change other users' language or routing/DNS.
+
+## Appearance / 外观
+
+Choose System, Light or Dark in General settings, including before login. System is the default and follows changes to the operating system preference. A manual selection takes precedence, is stored locally in the browser and synchronizes between tabs. The theme is applied before the page paints to reduce a light flash, and traffic charts use the selected theme colors. This does not change network settings or other users' preferences.
+
+常规设置提供跟随系统、浅色与深色，登录前也可使用。默认跟随系统并响应系统变化；人工选择保存在当前浏览器，并在同浏览器标签页同步。主题在页面绘制前应用，图表随主题配色，不改变网络配置。
 
 ## Future-device default
 
@@ -25,3 +31,5 @@ The about tab shows panel/core versions, gateway, upstream, subnet, DHCP state a
 小齿轮二级菜单包含常规、管理密码、接入与统计及订阅入口。语言选择保存在当前浏览器；登录前也可切换。新设备初始默认直连，保存新默认只影响此后首次发现的 MAC。已有设备开关不变，随机 MAC 改变也按新默认处理，不按同名继承权限。
 
 改密需当前密码与新密码确认，成功后全部会话退出，核心密钥不变。只读网络信息帮助排查；普通设置不能更改 DHCP 或网段。更改语言不会自动适配其他地区的分流/DNS。
+
+Automatic selection checks browser language preferences in order, including regional variants such as ja-JP, es-MX and fr-CA, and falls back to English if no language is supported. Device names and user content keep their original text.

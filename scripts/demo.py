@@ -12,10 +12,10 @@ class Demo(BaseHTTPRequestHandler):
  def do_GET(self):
   now=time.time()
   if self.path=='/':
-   html=(Path(__file__).resolve().parents[1]/'app/index.html').read_text().replace('{{GATEWAY}}','192.168.50.250').replace('<main>','<main><p style="text-align:center;color:#946000">演示数据 · 未连接真实网络 · 开关仅修改本地示例</p>')
+   html=(Path(__file__).resolve().parents[1]/'app/index.html').read_text().replace('{{GATEWAY}}','192.168.50.250').replace('<main>','<main><p class="demobanner">演示数据 · 未连接真实网络 · 开关仅修改本地示例</p>')
    self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.end_headers();self.wfile.write(html.encode());return
   if self.path=='/api/devices':return self.send({'devices':DEVICES,'preferences':PREFERENCES,'router_sync':{'ok':False},'csrf':'demo','core_ok':True,'version':'demo','dhcp':True,'error':'演示模式：所有设备和流量均为虚构。','gateway':'192.168.50.250'})
-  if self.path=='/api/settings':return self.send({'preferences':PREFERENCES,'gateway':'192.168.50.250','upstream':'192.168.50.1','subnet':'192.168.50.0/24','app_version':'0.1.0-rc.3','csrf':'demo'})
+  if self.path=='/api/settings':return self.send({'preferences':PREFERENCES,'gateway':'192.168.50.250','upstream':'192.168.50.1','subnet':'192.168.50.0/24','app_version':'0.1.0-rc.4','csrf':'demo'})
   if self.path=='/api/stats':return self.send({'ok':True,'updated':now,'up':210000,'down':2800000,'upload_total':120000000,'download_total':920000000,'connections':28,'memory':64000000,'history':[{'time':now-179+i,'up':180000+100000*math.sin(i/11)**2,'down':1600000+1500000*math.sin(i/19)**2} for i in range(180)],'device_traffic':{'ok':True,'since':now-3600,'devices':{d['mac']:d['proxy_traffic'] for d in DEVICES}}})
   if self.path=='/api/subscriptions':return self.send({'items':[],'active':'','available':False,'node_count':0})
   self.send({'error':'演示接口不存在'},404)

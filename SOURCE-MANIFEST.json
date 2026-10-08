@@ -1,6 +1,6 @@
 {
   "project": "nas-device-flow",
-  "version": "0.1.0-rc.3",
+  "version": "0.1.0-rc.4",
   "own_source_files": [
     "app/server.py",
     "app/device_names.py",
@@ -26,6 +26,7 @@
     "scripts/update.sh",
     "app/preferences.py",
     "tests/test_preferences.py",
-    "tests/test_ui_language.py"
+    "tests/test_ui_language.py",
+    "tests/test_ui_theme.py"
   ]
 }
