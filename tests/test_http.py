@@ -21,6 +21,8 @@ class HTTPTests(unittest.TestCase):
  def login(self):return self.request('/api/login',{'password':'fictional-admin-password'})
  def test_private_api_requires_login(self):
   self.assertEqual(self.request('/api/stats')[0],401)
+  self.assertEqual(self.request('/api/settings')[0],401)
+  self.assertEqual(self.request('/api/password',{'new_password':'irrelevant'})[0],401)
  def test_core_secret_cannot_login(self):
   self.assertEqual(self.request('/api/login',{'password':'fictional-core-api-key'})[0],401)
  def test_cookie_and_csrf_required(self):
@@ -37,4 +39,40 @@ class HTTPTests(unittest.TestCase):
   status,_,body=self.request('/');self.assertEqual(status,200)
   self.assertNotIn(b'fictional-core-api-key',body);self.assertNotIn(b'{{GATEWAY}}',body)
   self.assertIn(b'while(v>=1000',body);self.assertNotIn(b'MiB',body)
+ def auth(self):
+  _,headers,body=self.login()
+  return {'Cookie':headers['Set-Cookie'],'X-CSRF-Token':json.loads(body)['csrf']}
+ def test_settings_csrf_validation_and_persistence(self):
+  auth=self.auth()
+  self.assertEqual(self.request('/api/settings',{'new_device_proxy':True},{'Cookie':auth['Cookie']})[0],403)
+  self.assertEqual(self.request('/api/settings',{'new_device_proxy':'true'},auth)[0],400)
+  self.assertEqual(self.request('/api/settings',{'new_device_proxy':True},auth)[0],200)
+  status,_,body=self.request('/api/settings',headers=auth)
+  self.assertEqual(status,200);self.assertTrue(json.loads(body)['preferences']['new_device_proxy'])
+  self.assertNotIn(b'fictional-admin-password',body);self.assertNotIn(b'fictional-core-api-key',body)
+ def test_password_change_invalidates_all_sessions_and_preserves_core_secret(self):
+  auth=self.auth();other=self.auth()
+  payload={'current_password':'fictional-admin-password','new_password':'fictional-new-admin-password','confirm_password':'fictional-new-admin-password'}
+  self.assertEqual(self.request('/api/password',payload,auth)[0],200)
+  self.assertEqual(self.request('/api/settings',headers=auth)[0],401)
+  self.assertEqual(self.request('/api/settings',headers=other)[0],401)
+  self.assertEqual(self.login()[0],401)
+  self.assertEqual(self.request('/api/login',{'password':payload['new_password']})[0],200)
+  self.assertEqual((c.ROOT/'secret').read_text(),'fictional-core-api-key')
+  self.assertEqual((c.DATA/'admin-secret').stat().st_mode & 0o777,0o600)
+ def test_password_errors_preserve_credentials(self):
+  auth=self.auth();payload={'current_password':'wrong','new_password':'fictional-new-admin-password','confirm_password':'fictional-new-admin-password'}
+  self.assertEqual(self.request('/api/password',payload,auth)[0],403)
+  payload['current_password']='fictional-admin-password';payload['confirm_password']='different'
+  self.assertEqual(self.request('/api/password',payload,auth)[0],400)
+  payload['new_password']=payload['confirm_password']='short'
+  self.assertEqual(self.request('/api/password',payload,auth)[0],400)
+  payload['new_password']=payload['confirm_password']='fictional-core-api-key'
+  self.assertEqual(self.request('/api/password',payload,auth)[0],400)
+  self.assertEqual(self.request('/api/settings',headers=auth)[0],200)
+  self.assertEqual((c.DATA/'admin-secret').read_text(),'fictional-admin-password')
+ def test_password_verification_is_rate_limited(self):
+  auth=self.auth();payload={'current_password':'wrong','new_password':'fictional-new-admin-password','confirm_password':'fictional-new-admin-password'}
+  for _ in range(8):self.assertEqual(self.request('/api/password',payload,auth)[0],403)
+  self.assertEqual(self.request('/api/password',payload,auth)[0],429)
 if __name__=='__main__':unittest.main()

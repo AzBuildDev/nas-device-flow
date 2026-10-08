@@ -12,7 +12,7 @@
 
 近期原运行环境实机验收：双网卡电脑启用实际出网接口后已观察到代理连接。iPad 先前持有旧主路由租约，用户确认忽略原 Wi-Fi 后仅输入密码重新加入，国外网页已可打开；现场检测到直连与代理连接。该结果验证原环境的自动网络配置迁移，不能替代通用发布包的干净安装验收。
 
-iPad 重入时私人 MAC 改变，生成了新记录。现场按用户原来的代理意愿为新记录开启分流，并停用旧记录。这不是跨随机 MAC 自动继承授权。自动加入网络与身份持久化分开：IP/DNS自动获取；MAC不变时保持开关；MAC变化时新设备默认直连，设备同名不能证明同一设备。
+iPad 重入时私人 MAC 改变，生成了新记录。现场按用户原来的代理意愿为新记录开启分流，并停用旧记录。这不是跨随机 MAC 自动继承授权。自动加入网络与身份持久化分开：IP/DNS自动获取；MAC不变时保持开关；MAC变化时按当前新设备默认策略处理（初始直连），设备同名不能证明同一设备。
 
 ## Status semantics
 
@@ -25,3 +25,9 @@ Renew DHCP and inspect the client gateway/DNS. Static clients may have no NAS le
 ## 后续诊断状态设计
 
 分开显示“策略已启用”“近期发现”“有租约”“近期采到核心流量”“近期采到代理流量”。未知字段显示待确认，不合并为笼统的“网络正常”。只有用户核对或有可靠客户端证据才能展示实际网关/DNS。默认网关与 DNS 不能由邻居表推断；本地候选已实现有效 MAC/IP 租约与最近三分钟采样核心连接状态，仍无法证明实际默认网关/DNS和代理目标成功。
+
+## Updating to rc.3 / 更新到 rc.3
+
+Back up runtime and .env privately, fetch rc.3, and run `sh scripts/update.sh`. The controller stops gracefully before recreation. Existing device switches, subscriptions and sampled totals remain in runtime. Missing preferences.json defaults to direct only for newly discovered devices. The new settings menu allows language, future-device defaults and password changes; no DHCP/subnet migration is performed automatically.
+
+更新前私下备份 runtime 和 .env，获取 rc.3 后运行 `sh scripts/update.sh`。已有设备开关保持，新设备初始默认直连；网页改密后需重新登录。普通设置不会变更 DHCP/网段。

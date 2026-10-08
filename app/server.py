@@ -15,6 +15,7 @@ from subscriptions import Subscriptions
 from urllib.parse import quote
 from settings import Settings
 from access_status import AccessStatus, valid_leases
+from preferences import load_preferences, save_preferences
 
 ROOT=Path(os.environ.get('NDF_DATA_ROOT','/data'))
 DATA=ROOT/'control-center'
@@ -107,7 +108,9 @@ def update_device(devices,mac,ip,name='',source='neighbor',seen=False):
     # An IP belongs to one active MAC; revoke an old mapping before granting any new one.
     for other,d in devices.items():
         if other!=mac and d.get('ip')==ip: d['ip']=''; d['online']=False
-    d=devices.setdefault(mac,{'mac':mac,'name':'','enabled':False,'first_seen':int(time.time())})
+    if mac not in devices:
+        devices[mac]={'mac':mac,'name':'','enabled':load_preferences(DATA)['new_device_proxy'],'first_seen':int(time.time())}
+    d=devices[mac]
     d['ip']=ip; d['source']=source
     if name and name!='*': d['hostname']=name[:80]
     if seen: d['last_seen']=int(time.time())
@@ -235,7 +238,7 @@ def dhcp_supervisor():
         time.sleep(3)
 
 class Handler(BaseHTTPRequestHandler):
-    server_version='NASDeviceFlow/0.1.0-rc.2'
+    server_version='NASDeviceFlow/0.1.0-rc.3'
     def log_message(self,*args): pass
     def send(self,status,body,ctype='application/json',cookie=None):
         data=body.encode() if isinstance(body,str) else json.dumps(body,ensure_ascii=False).encode()
@@ -254,6 +257,9 @@ class Handler(BaseHTTPRequestHandler):
         if self.path=='/': return self.send(200,HTML.read_text().replace('{{CORE_URL}}',SETTINGS.core_url).replace('{{GATEWAY}}',SETTINGS.core_ip),'text/html')
         s=self.session()
         if not s: return self.send(401,{'error':'请登录'})
+        if self.path=='/api/settings':
+            with LOCK: preferences=load_preferences(DATA)
+            return self.send(200,{'preferences':preferences,'gateway':SETTINGS.core_ip,'upstream':SETTINGS.upstream,'panel_ip':SETTINGS.panel_ip,'subnet':SETTINGS.subnet,'routing':'China direct / other destinations via PROXY','app_version':'0.1.0-rc.3','csrf':s['csrf']})
         if self.path=='/api/subscriptions':
             try: return self.send(200,subscription_info())
             except Exception: return self.send(503,{'error':'订阅信息读取失败'})
@@ -277,7 +283,7 @@ class Handler(BaseHTTPRequestHandler):
             healthy=True
             try: version=core('/version').get('version','')
             except Exception: version=''; healthy=False
-            return self.send(200,{'devices':devices,'router_sync':dict(ROUTER_STATUS),'csrf':s['csrf'],'core_ok':healthy,'version':version,'dhcp':DHCP is not None and DHCP.poll() is None,'error':LAST_ERROR,'gateway':SETTINGS.core_ip,'client_ip':self.client_address[0]})
+            return self.send(200,{'devices':devices,'preferences':load_preferences(DATA),'router_sync':dict(ROUTER_STATUS),'csrf':s['csrf'],'core_ok':healthy,'version':version,'dhcp':DHCP is not None and DHCP.poll() is None,'error':LAST_ERROR,'gateway':SETTINGS.core_ip,'client_ip':self.client_address[0]})
         return self.send(404,{'error':'不存在'})
     def do_POST(self):
         # JSON + SameSite cookie + CSRF token + exact Origin restrict LAN cross-site attacks.
@@ -307,6 +313,28 @@ class Handler(BaseHTTPRequestHandler):
         s=self.session()
         if not s: return self.send(401,{'error':'请登录'})
         if not hmac.compare_digest(self.headers.get('X-CSRF-Token',''),s['csrf']): return self.send(403,{'error':'请求验证失败'})
+        if self.path=='/api/settings':
+            with LOCK:
+                try: result=save_preferences(DATA,body,atomic)
+                except ValueError as e: return self.send(400,{'error':str(e)})
+            return self.send(200,{'ok':True,'preferences':result})
+        if self.path=='/api/password':
+            current=body.get('current_password');new=body.get('new_password');confirm=body.get('confirm_password')
+            if not all(isinstance(x,str) for x in (current,new,confirm)):
+                return self.send(400,{'error':'密码参数无效'})
+            if not 16<=len(new)<=256 or new!=new.strip(): return self.send(400,{'error':'新密码需要 16–256 个字符，首尾不能有空格'})
+            if new!=confirm: return self.send(400,{'error':'两次输入的新密码不一致'})
+            with LOCK:
+                ip=self.client_address[0];now=time.time()
+                attempts=[t for t in FAILURES.get(ip,[]) if now-t<300]
+                if len(attempts)>=8: return self.send(429,{'error':'尝试过多，请五分钟后再试'})
+                if not hmac.compare_digest(current.encode(),(DATA/'admin-secret').read_text().strip().encode()):
+                    FAILURES[ip]=attempts+[now];return self.send(403,{'error':'当前密码不正确'})
+                if hmac.compare_digest(new.encode(),(ROOT/'secret').read_text().strip().encode()):
+                    return self.send(400,{'error':'管理密码不能与核心密钥相同'})
+                atomic(DATA/'admin-secret',new+'\n')
+                SESSIONS.clear();FAILURES.pop(ip,None)
+            return self.send(200,{'ok':True,'reauthenticate':True},cookie='session=; Max-Age=0; HttpOnly; SameSite=Strict; Path=/')
         if self.path=='/api/logout':
             c=http.cookies.SimpleCookie(self.headers.get('Cookie','')); SESSIONS.pop(c['session'].value,None)
             return self.send(200,{'ok':True},cookie='session=; Max-Age=0; HttpOnly; SameSite=Strict; Path=/')

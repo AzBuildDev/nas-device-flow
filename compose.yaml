@@ -17,7 +17,7 @@ services:
       options: {max-size: 5m, max-file: '2'}
   controller:
     stop_grace_period: 30s
-    image: nas-device-flow-controller:0.1.0-rc.2
+    image: nas-device-flow-controller:0.1.0-rc.3
     build: .
     restart: unless-stopped
     cap_drop: [ALL]

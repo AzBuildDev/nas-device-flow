@@ -7,27 +7,285 @@
 body{padding:28px 24px}.card{padding:28px 32px}h1{font-size:27px}.headeractions{display:flex;align-items:center;gap:12px}.headeractions .small{font-size:13px;color:#6d776f}.overview{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-top:24px}.chartbox{margin:0;padding:16px;background:#fbfdfb}.charthead{font-size:12px}#speedchart{height:104px;margin-top:8px}.chartbox .statsnote{font-size:11px;margin-top:6px}.metrics{margin:0;grid-template-columns:repeat(2,1fr);gap:10px}.metric{padding:12px 14px;background:#f5f8f6;border-radius:12px}.metric strong{font-size:21px;margin:5px 0}.metric small,.metric span{font-size:11px}.tools{margin:26px 0 0;padding-bottom:12px;border-bottom:1px solid #e9eeea}h2{font-size:21px;margin:0 0 6px}.devicehint{font-size:12px;color:#7e8980}.row{padding:19px 0}.name{font-size:18px}.address{margin-top:5px}.subscriptions{margin-top:24px;padding:0;background:#fafcfb}.subscriptions>summary{padding:17px 18px;cursor:pointer;font-size:14px;color:#4f6858;list-style-position:inside}.subhint{float:right;color:#859087;font-size:12px}.subcontent{padding:0 18px 16px}.subhead{padding-top:8px}.subhead strong{font-size:14px}.summary{padding-top:18px}.help{margin-top:18px}.subscriptions[open]>summary{border-bottom:1px solid #e8eee9;margin-bottom:12px}
 @media(max-width:640px){body{padding:14px 10px}.card{padding:20px 16px}h1{font-size:22px}header{gap:10px}.headeractions{flex-direction:column-reverse;gap:8px;align-items:flex-end}.headeractions .small{padding:5px 8px;font-size:11px}header p{font-size:13px;max-width:220px}.overview{grid-template-columns:1fr;gap:10px;margin-top:18px}.metrics{grid-template-columns:repeat(4,1fr);gap:5px}.metric{padding:9px 6px;min-width:0}.metric strong{font-size:15px}.metric small,.metric span{font-size:9px}.chartbox{padding:12px}#speedchart{height:74px}.charthead{font-size:10px}.charthead>span:last-child{font-size:9px}.tools{margin-top:22px}h2{font-size:19px}.devicehint{font-size:11px}.row{padding:17px 0;gap:10px}.name{font-size:16px;flex-wrap:wrap;gap:6px}.icon{width:30px;height:30px;flex-shrink:0}.switchwrap{min-width:58px}.subhint{display:none}.footer{line-height:1.5}}
 .name{flex-wrap:wrap}.deviceflow{font-size:11px;line-height:1.4;font-weight:400;padding:4px 7px;border-radius:6px;color:#54755f;background:#f0f6f2;white-space:nowrap}@media(max-width:640px){.deviceflow{font-size:10px;padding:3px 5px}}
+
+.gear{display:grid;place-items:center;width:34px;height:34px;border:1px solid #e1e7e2;border-radius:10px;background:white;color:#68776d;padding:6px}.gear svg{width:20px;height:20px}.login{position:relative}.login .gear{position:absolute;right:18px;top:18px}.settingsdialog{border:1px solid #e1e7e2;border-radius:20px;padding:0;width:min(650px,calc(100vw - 24px));max-height:calc(100dvh - 32px);color:#17221b;box-shadow:0 20px 70px #10231825}.settingsdialog::backdrop{background:#182d2355}.settingshead{padding:20px 24px;border-bottom:1px solid #e8eee9}.settingshead h2{margin:0;font-size:21px}.settingsbody{display:grid;grid-template-columns:145px 1fr;min-height:320px}.settingsnav{padding:16px 10px;border-right:1px solid #e8eee9;display:flex;flex-direction:column;gap:5px;align-items:stretch}.settingsnav button{border:0;background:transparent;color:#68776d;border-radius:9px;padding:11px;text-align:left;font-size:13px}.settingsnav button[aria-selected=true]{background:#eaf5ed;color:#16864b;font-weight:600}.settingscontent{padding:22px 24px;min-width:0}.settingfield{margin-bottom:24px}.settingfield label,.passwordform label{display:block;font-size:14px;font-weight:600;margin-bottom:8px}.settingscontent select{font:inherit;font-size:14px;width:100%;padding:11px;border:1px solid #dce4dd;border-radius:9px;background:white;color:#17221b}.settingscontent p{font-size:12px;margin-top:9px}.settingscontent .primary{width:auto;padding:10px 18px;font-size:13px}.passwordform input{font-size:14px;margin:0 0 15px;padding:11px}.passwordform p{margin-bottom:16px}.settingsstatus{font-size:13px;margin-top:12px;line-height:1.6;color:#16864b}.settingsstatus.bad{color:#a43e35}.networkinfo{margin:0 0 20px;font-size:12px}.networkinfo>div{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #edf0ed}.networkinfo dt{color:#6d776f}.networkinfo dd{margin:0;overflow-wrap:anywhere;text-align:right}.settingscontent h3{font-size:14px;margin:18px 0 8px}.settingscontent .help p{margin:10px 0}.headeractions{flex-direction:row}.closebutton{border:0;background:#f3f6f4;border-radius:8px;width:30px;height:30px;font-size:21px;color:#68776d}.settingsnote{padding:10px 12px;background:#f5f8f6;border-radius:9px}.devicehint{display:block;margin-top:3px}
+@media(max-width:640px){.headeractions{flex-direction:column-reverse;gap:8px}.settingshead{padding:17px 18px}.settingsbody{grid-template-columns:1fr}.settingsnav{flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid #e8eee9;padding:10px}.settingsnav button{font-size:12px;padding:9px}.settingscontent{padding:18px}.mode{max-width:90px}.settingsdialog{max-height:calc(100dvh - 24px)}}
 </style><main>
-<section class="card login" id="login"><h1>NAS 网络控制中心</h1><p>登录后管理每台设备的智能代理。</p><form id="form"><input type="password" id="password" placeholder="输入管理密码" autocomplete="current-password" aria-label="管理密码" required><button class="primary" id="loginbtn">登录</button><div class="error" id="loginerror"></div></form><p class="help">使用初始化时设置的面板密码，与核心 API 密钥分别保存。</p></section>
-<section class="card hidden" id="panel"><header><div><h1>NAS 网络控制中心</h1><p>连接 Wi-Fi，设备自动接入；代理由你决定。</p></div><div class="headeractions"><button class="small" id="opensettings">订阅设置</button><span class="badge" id="status">正在连接</span></div></header>
-<div class="overview"><div class="chartbox"><div class="charthead"><span>最近 3 分钟 · 速度走势</span><span><b class="legenddown">● 下载</b>　<b class="legendup">● 上传</b>　<span id="chartpeak">—</span></span></div><svg id="speedchart" viewBox="0 0 900 170" preserveAspectRatio="none" role="img" aria-label="最近三分钟上传下载速度走势图"></svg><div class="statsnote" id="statsstate">正在读取实时流量</div></div><div class="metrics" aria-label="实时网络统计"><div class="metric"><small>↓ 实时下载</small><strong id="downrate">—</strong><span id="downbits">等待数据</span></div><div class="metric"><small>↑ 实时上传</small><strong id="uprate">—</strong><span id="upbits">等待数据</span></div><div class="metric"><small>核心累计流量</small><strong id="totaltraffic">—</strong><span id="totals">核心重启后重新累计</span></div><div class="metric"><small>活跃连接</small><strong id="connections">—</strong><span id="memory">核心内存 —</span></div></div></div><div class="notice" id="notice"></div><div class="tools"><div><h2>设备分流</h2><span class="muted" id="count">已发现设备</span><span class="devicehint"> · 新设备默认直连；需使用 NAS 网关</span></div><button class="small" id="refresh">刷新</button></div><div id="devices"></div><div class="summary"><span class="muted">已配置智能代理<br><small>新设备默认直连</small></span><strong id="enabled">0 / 0</strong></div>
-<details class="subscriptions" id="subscription-settings"><summary>订阅与节点设置 <span class="subhint">切换、添加及更新订阅</span></summary><div class="subcontent"><div class="subhead"><strong>订阅与当前节点</strong><div class="subbuttons"><button class="small" id="updatesub">更新当前订阅</button><button class="small" id="addsub">添加订阅</button></div></div><p class="subdetail" id="substatus">正在读取</p><form id="subform" class="subform hidden"><input id="subname" aria-label="订阅名称" placeholder="订阅名称" maxlength="60" required><input id="suburl" type="password" aria-label="订阅链接" placeholder="Clash / Mihomo 订阅链接" autocomplete="off" required><button class="small" type="submit">保存</button></form><div id="sublist"></div><div id="suberror" class="suberror" role="status"></div><p class="statsnote">切换仅更换节点来源，保留设备开关和国内外分流规则。支持 Clash/Mihomo YAML 订阅；现有连接可能仍使用旧节点，重新打开应用后生效。</p></div></details><div class="help"><details><summary>接入方式与使用说明</summary><p>流量面板统计经过 Mihomo 核心的直连与代理流量，不代表整个局域网总流量；Mbps 是即时吞吐量，不是套餐带宽或测速结果。累计流量在核心重启后归零。</p><p>设备的 IP、DNS 保持自动获取，关闭本机 VPN 和系统代理。开关开启后：国内直连、国外按规则代理；关闭后：流量经 NAS 直连。切换会重建该设备的连接。</p><p>原来手动配置的设备，需要一次性恢复自动 IP/DNS。旧 DHCP 租约不会被服务器立即强制改写；必要时忽略此 Wi-Fi 后重新输入密码加入，IP/DNS保持自动；仅在设备网关是 {{GATEWAY}} 时，开关才控制其流量。</p><p>设备通过 DHCP 和局域网邻居记录发现，名称会尝试从 DHCP 和 mDNS 自动读取；最近在线表示近期有网络响应，不保证设备当前仍在线。MAC 地址发生变化时会被视为新设备，默认直连。设备名称旁的代理流量为采样累计，只统计实际代理连接的上传与下载，不含直连；短连接及采集停机期间可能漏计，不能代替订阅账单。</p><p>NAS 停机时，这套网络没有自动故障切换。本版本仅接管 IPv4；主路由下发的公网 IPv6 可能绕过分流，需要在接管前关闭或另行配置。</p></details></div></section>
+<section class="card login" id="login"><button class="gear" type="button" id="loginsettings" aria-label="设置" title="设置"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m9.5 3-.5 2-2 .9-1.8-.6-2.5 4.3 1.5 1.4v2l-1.5 1.4 2.5 4.3 1.8-.6 2 .9.5 2h5l.5-2 2-.9 1.8.6 2.5-4.3-1.5-1.4v-2l1.5-1.4-2.5-4.3-1.8.6-2-.9-.5-2z"/><circle cx="12" cy="12" r="3"/></svg></button><h1>NAS 网络控制中心</h1><p>登录后管理每台设备的智能代理。</p><form id="form"><input type="password" id="password" placeholder="输入管理密码" autocomplete="current-password" aria-label="管理密码" required><button class="primary" id="loginbtn">登录</button><div class="error" id="loginerror"></div></form><p class="help">使用初始化时设置的面板密码，与核心 API 密钥分别保存。</p></section>
+<section class="card hidden" id="panel"><header><div><h1>NAS 网络控制中心</h1><p>连接 Wi-Fi，设备自动接入；代理由你决定。</p></div><div class="headeractions"><button class="gear" type="button" id="opensettings" aria-label="设置" title="设置"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m9.5 3-.5 2-2 .9-1.8-.6-2.5 4.3 1.5 1.4v2l-1.5 1.4 2.5 4.3 1.8-.6 2 .9.5 2h5l.5-2 2-.9 1.8.6 2.5-4.3-1.5-1.4v-2l1.5-1.4-2.5-4.3-1.8.6-2-.9-.5-2z"/><circle cx="12" cy="12" r="3"/></svg></button><span class="badge" id="status">正在连接</span></div></header>
+<div class="overview"><div class="chartbox"><div class="charthead"><span>最近 3 分钟 · 速度走势</span><span><b class="legenddown">● 下载</b>　<b class="legendup">● 上传</b>　<span id="chartpeak">—</span></span></div><svg id="speedchart" viewBox="0 0 900 170" preserveAspectRatio="none" role="img" aria-label="最近三分钟上传下载速度走势图"></svg><div class="statsnote" id="statsstate">正在读取实时流量</div></div><div class="metrics" aria-label="实时网络统计"><div class="metric"><small>↓ 实时下载</small><strong id="downrate">—</strong><span id="downbits">等待数据</span></div><div class="metric"><small>↑ 实时上传</small><strong id="uprate">—</strong><span id="upbits">等待数据</span></div><div class="metric"><small>核心累计流量</small><strong id="totaltraffic">—</strong><span id="totals">核心重启后重新累计</span></div><div class="metric"><small>活跃连接</small><strong id="connections">—</strong><span id="memory">核心内存 —</span></div></div></div><div class="notice" id="notice"></div><div class="tools"><div><h2>设备分流</h2><span class="muted" id="count">已发现设备</span><span class="devicehint" id="defaultsummary"></span></div><button class="small" id="refresh">刷新</button></div><div id="devices"></div><div class="summary"><span class="muted">已配置智能代理<br><small id="defaultfooter"></small></span><strong id="enabled">0 / 0</strong></div>
+<details class="subscriptions" id="subscription-settings"><summary>订阅与节点设置 <span class="subhint">切换、添加及更新订阅</span></summary><div class="subcontent"><div class="subhead"><strong>订阅与当前节点</strong><div class="subbuttons"><button class="small" id="updatesub">更新当前订阅</button><button class="small" id="addsub">添加订阅</button></div></div><p class="subdetail" id="substatus">正在读取</p><form id="subform" class="subform hidden"><input id="subname" aria-label="订阅名称" placeholder="订阅名称" maxlength="60" required><input id="suburl" type="password" aria-label="订阅链接" placeholder="Clash / Mihomo 订阅链接" autocomplete="off" required><button class="small" type="submit">保存</button></form><div id="sublist"></div><div id="suberror" class="suberror" role="status"></div><p class="statsnote">切换仅更换节点来源，保留设备开关和国内外分流规则。支持 Clash/Mihomo YAML 订阅；现有连接可能仍使用旧节点，重新打开应用后生效。</p></div></details></section>
 <div class="footer hidden" id="footer"><span id="core">网关 · {{GATEWAY}}</span><span><button class="edit" id="logout">退出登录</button></span></div></main>
+<dialog id="settingsdialog" class="settingsdialog" aria-labelledby="settingstitle"><header class="settingshead"><h2 id="settingstitle">设置</h2><button type="button" class="closebutton" id="closesettings" aria-label="关闭设置">×</button></header><div class="settingsbody"><nav class="settingsnav" role="tablist" aria-label="设置分类"><button type="button" id="tab-general" role="tab" aria-controls="settings-general" aria-selected="true" data-section="general">常规</button><button type="button" id="tab-password" role="tab" aria-controls="settings-password" aria-selected="false" data-section="password">管理密码</button><button type="button" id="tab-about" role="tab" aria-controls="settings-about" aria-selected="false" data-section="about">接入与统计</button><button type="button" id="settings-subscriptions">订阅与节点 ↗</button></nav><div class="settingscontent"><section id="settings-general" role="tabpanel" aria-labelledby="tab-general"><div class="settingfield"><label for="language">界面语言</label><select id="language"><option value="auto">跟随浏览器</option><option value="zh-CN">中文</option><option value="en">English</option></select><p>语言选择保存在此浏览器，不影响其他人。</p></div><p id="settings-login-note" class="settingsnote">登录后可修改新设备默认策略和管理密码。</p><form id="preferenceform" class="hidden"><div class="settingfield"><label for="defaultpolicy">新设备默认策略</label><select id="defaultpolicy"><option value="direct">直连</option><option value="smart">智能分流</option></select><p>仅影响之后首次发现的设备，已有开关保持不变。私人 MAC 改变也算新设备。</p><p>智能分流会使用当前订阅，按现有规则决定直连或代理。</p></div><button class="primary" id="savepreferences" type="submit">保存默认策略</button><div id="preferencesstatus" class="settingsstatus" role="status"></div></form></section><section id="settings-password" class="hidden" role="tabpanel" aria-labelledby="tab-password"><form id="passwordform" class="passwordform"><p>修改后所有登录会话退出；Mihomo 核心密钥保持独立。</p><label for="currentpassword">当前密码</label><input id="currentpassword" type="password" autocomplete="current-password" required maxlength="256"><label for="newpassword">新密码</label><input id="newpassword" type="password" autocomplete="new-password" required minlength="16" maxlength="256"><label for="confirmpassword">确认新密码</label><input id="confirmpassword" type="password" autocomplete="new-password" required minlength="16" maxlength="256"><p>使用 16–256 个字符，首尾不能有空格。</p><button class="primary" id="savepassword" type="submit">修改密码并退出</button><div id="passwordstatus" class="settingsstatus" role="status"></div></form></section><section id="settings-about" class="hidden" role="tabpanel" aria-labelledby="tab-about"><dl class="networkinfo"><div><dt>面板版本</dt><dd id="appversion">—</dd></div><div><dt>Mihomo 版本</dt><dd id="coreversion">—</dd></div><div><dt>自动接入</dt><dd id="dhcpstate">—</dd></div><div><dt>NAS 网关</dt><dd id="gatewayinfo">—</dd></div><div><dt>上级路由器</dt><dd id="upstreaminfo">—</dd></div><div><dt>局域网网段</dt><dd id="subnetinfo">—</dd></div><div><dt>设备流量起点</dt><dd id="trafficsince">—</dd></div></dl><h3>流量与接入说明</h3><div class="help"><p>流量面板统计经过 Mihomo 核心的直连与代理流量，不代表整个局域网总流量；Mbps 是即时吞吐量，不是套餐带宽或测速结果。累计流量在核心重启后归零。</p><p>设备的 IP、DNS 保持自动获取，关闭本机 VPN 和系统代理。开关开启后：国内直连、国外按规则代理；关闭后：流量经 NAS 直连。切换会重建该设备的连接。</p><p>原来手动配置的设备，需要一次性恢复自动 IP/DNS。旧 DHCP 租约不会被服务器立即强制改写；必要时忽略此 Wi-Fi 后重新输入密码加入，IP/DNS保持自动；仅在设备网关是 {{GATEWAY}} 时，开关才控制其流量。</p><p>设备通过 DHCP 和局域网邻居记录发现，名称会尝试从 DHCP 和 mDNS 自动读取；最近在线表示近期有网络响应，不保证设备当前仍在线。MAC 地址发生变化时会被视为新设备，使用当前默认策略。设备名称旁的代理流量为采样累计，只统计实际代理连接的上传与下载，不含直连；短连接及采集停机期间可能漏计，不能代替订阅账单。</p><p>NAS 停机时，这套网络没有自动故障切换。本版本仅接管 IPv4；主路由下发的公网 IPv6 可能绕过分流，需要在接管前关闭或另行配置。</p></div><p class="settingsnote">语言切换不改变分流规则或 DNS。当前初始化默认规则为中国直连、其他目的地代理；海外部署请先配置适合当地的规则与 DNS。</p></section></div></div></dialog>
+
 <script>
+
+let lastDevices=null,lastStats=null,lastSettings=null;
+let languagePreference='auto';
+try { languagePreference=localStorage.getItem('ndf-language')||'auto'; } catch(e) {}
+if(!['auto','zh-CN','en'].includes(languagePreference))languagePreference='auto';
+function currentLanguage(){return languagePreference==='auto'?((navigator.language||'en').toLowerCase().startsWith('zh')?'zh-CN':'en'):languagePreference;}
+const EN={
+ "网关 · {{GATEWAY}}": "Gateway · {{GATEWAY}}",
+ "NAS 网络控制中心": "NAS Device Flow",
+ "登录后管理每台设备的智能代理。": "Sign in to manage smart routing for each device.",
+ "输入管理密码": "Enter admin password",
+ "管理密码": "Admin password",
+ "登录": "Sign in",
+ "使用初始化时设置的面板密码，与核心 API 密钥分别保存。": "Use the panel password set during initialization. It is separate from the core API key.",
+ "连接 Wi-Fi，设备自动接入；代理由你决定。": "Devices join over Wi-Fi. You decide which use smart routing.",
+ "正在连接": "Connecting",
+ "最近 3 分钟 · 速度走势": "Last 3 minutes · Traffic rate",
+ "● 下载": "● Download",
+ "● 上传": "● Upload",
+ "最近三分钟上传下载速度走势图": "Upload and download rates over the last three minutes",
+ "正在读取实时流量": "Loading traffic",
+ "实时网络统计": "Live network statistics",
+ "↓ 实时下载": "↓ Download",
+ "↑ 实时上传": "↑ Upload",
+ "等待数据": "Waiting for data",
+ "核心累计流量": "Core traffic total",
+ "核心重启后重新累计": "Resets when the core restarts",
+ "活跃连接": "Active connections",
+ "核心内存 —": "Core memory —",
+ "设备分流": "Device routing",
+ "已发现设备": "Discovered devices",
+ "刷新": "Refresh",
+ "已配置智能代理": "Smart routing enabled",
+ "订阅与节点设置": "Subscriptions & nodes",
+ "切换、添加及更新订阅": "Switch, add or update subscriptions",
+ "订阅与当前节点": "Subscriptions & current node",
+ "更新当前订阅": "Refresh subscription",
+ "添加订阅": "Add subscription",
+ "正在读取": "Loading",
+ "订阅名称": "Subscription name",
+ "订阅链接": "Subscription URL",
+ "Clash / Mihomo 订阅链接": "Clash / Mihomo subscription URL",
+ "保存": "Save",
+ "切换仅更换节点来源，保留设备开关和国内外分流规则。支持 Clash/Mihomo YAML 订阅；现有连接可能仍使用旧节点，重新打开应用后生效。": "Switching changes the node source and keeps device preferences and routing rules. Clash/Mihomo YAML subscriptions are supported. Existing connections may retain their previous node; reopen the app to reconnect.",
+ "流量面板统计经过 Mihomo 核心的直连与代理流量，不代表整个局域网总流量；Mbps 是即时吞吐量，不是套餐带宽或测速结果。累计流量在核心重启后归零。": "Charts count direct and proxied traffic passing through Mihomo, not total LAN traffic. Mbps is current throughput, not your plan speed or a speed test. Core totals reset on core restart.",
+ "设备的 IP、DNS 保持自动获取，关闭本机 VPN 和系统代理。开关开启后：国内直连、国外按规则代理；关闭后：流量经 NAS 直连。切换会重建该设备的连接。": "Keep client IP and DNS automatic and turn off conflicting VPNs or system proxies. With smart routing enabled, current rules choose direct or proxy routes. With it off, traffic goes directly via the NAS. Toggling reconnects the device’s core connections.",
+ "原来手动配置的设备，需要一次性恢复自动 IP/DNS。旧 DHCP 租约不会被服务器立即强制改写；必要时忽略此 Wi-Fi 后重新输入密码加入，IP/DNS保持自动；仅在设备网关是 {{GATEWAY}} 时，开关才控制其流量。": "Previously configured clients must restore automatic IP/DNS once. Old DHCP leases cannot be immediately rewritten by the server; if needed, forget and rejoin the Wi-Fi with its password. Routing controls require clients to use {{GATEWAY}} as their gateway.",
+ "设备通过 DHCP 和局域网邻居记录发现，名称会尝试从 DHCP 和 mDNS 自动读取；最近在线表示近期有网络响应，不保证设备当前仍在线。MAC 地址发生变化时会被视为新设备，默认直连。设备名称旁的代理流量为采样累计，只统计实际代理连接的上传与下载，不含直连；短连接及采集停机期间可能漏计，不能代替订阅账单。": "Devices are discovered from DHCP and neighbor records, with names from DHCP or mDNS. Recently online means a recent network response. A changed MAC is a new device and follows the configured default policy. Per-device proxy traffic is sampled upload plus download, excluding direct traffic. Short connections and downtime may be missed; these are not billing figures.",
+ "NAS 停机时，这套网络没有自动故障切换。本版本仅接管 IPv4；主路由下发的公网 IPv6 可能绕过分流，需要在接管前关闭或另行配置。": "There is no automatic failover if the NAS stops. This version routes IPv4 only. Public IPv6 advertised by the main router can bypass these rules; disable it or configure IPv6 routing separately.",
+ "退出登录": "Sign out",
+ "设置": "Settings",
+ "关闭设置": "Close settings",
+ "设置分类": "Settings sections",
+ "常规": "General",
+ "接入与统计": "Network & stats",
+ "订阅与节点 ↗": "Subscriptions & nodes ↗",
+ "界面语言": "Interface language",
+ "跟随浏览器": "Browser language",
+ "语言选择保存在此浏览器，不影响其他人。": "Language is saved in this browser and does not affect other users.",
+ "登录后可修改新设备默认策略和管理密码。": "Sign in to change the new-device policy and admin password.",
+ "新设备默认策略": "New-device default policy",
+ "直连": "Direct",
+ "智能分流": "Smart routing",
+ "仅影响之后首次发现的设备，已有开关保持不变。私人 MAC 改变也算新设备。": "Applies only to devices first discovered after saving. Existing switches stay unchanged. A changed private MAC counts as a new device.",
+ "智能分流会使用当前订阅，按现有规则决定直连或代理。": "Smart routing uses your active subscription. Current rules choose direct or proxy routes.",
+ "保存默认策略": "Save default policy",
+ "修改后所有登录会话退出；Mihomo 核心密钥保持独立。": "Changing the password signs out all sessions. The Mihomo API key remains separate.",
+ "当前密码": "Current password",
+ "新密码": "New password",
+ "确认新密码": "Confirm new password",
+ "使用 16–256 个字符，首尾不能有空格。": "Use 16–256 characters with no leading or trailing spaces.",
+ "修改密码并退出": "Change password & sign out",
+ "面板版本": "Panel version",
+ "Mihomo 版本": "Mihomo version",
+ "自动接入": "Automatic setup",
+ "NAS 网关": "NAS gateway",
+ "上级路由器": "Upstream router",
+ "局域网网段": "LAN subnet",
+ "设备流量起点": "Device traffic counted since",
+ "流量与接入说明": "Traffic & connection details",
+ "语言切换不改变分流规则或 DNS。当前初始化默认规则为中国直连、其他目的地代理；海外部署请先配置适合当地的规则与 DNS。": "Changing language does not change routing rules or DNS. Initialization defaults to China-direct and other destinations via proxy. Configure appropriate rules and DNS for deployments elsewhere.",
+ " · 使用中": " · Active",
+ " · 到期 ": " · Expires ",
+ " · 暂停更新": " · Updates paused",
+ " · 更新于 ": " · Updated ",
+ " · 订阅用量 ": " · Usage ",
+ " 个节点": " nodes",
+ " 台已开启分流的设备尚未确认接入。若保留旧租约，请忽略此 Wi-Fi 后重新输入密码加入，IP/DNS保持自动。": " enabled devices have no confirmed core connection or DHCP lease. If an old lease persists, forget and rejoin Wi-Fi; keep IP/DNS automatic.",
+ " 开始，不含直连；短连接可能漏计，非订阅账单。": ". Direct traffic excluded; short connections may be missed. Not a subscription bill.",
+ " 智能代理": " smart routing",
+ "DHCP 尚未接管": "DHCP takeover inactive",
+ "。自 ": "; counted since ",
+ "代理 ≈ ": "Proxy ≈ ",
+ "代理采样累计：上传 ": "Sampled proxy total: upload ",
+ "切换": "Switch",
+ "删除": "Delete",
+ "删除订阅“": "Delete subscription “",
+ "华为": "Huawei",
+ "命名": "Rename",
+ "峰值 ": "Peak ",
+ "已保存": "Saved",
+ "已发现设备 · ": "Devices · ",
+ "已记录": "Recorded",
+ "平板": "Tablet",
+ "当前节点：": "Current node: ",
+ "当前订阅": "Active subscription",
+ "手机": "Phone",
+ "排插": "Power strip",
+ "接入待确认 · 静态地址或旧租约需核对": "Connection unconfirmed · Check static addresses or old leases",
+ "提供": " data",
+ "旁路由未连接": "Core unavailable",
+ "智能代理 · 待接入": "Smart · Awaiting connection",
+ "智能代理 · 待验证": "Smart · Unverified",
+ "智能灯": "Smart light",
+ "智能策略已启用": "Smart policy enabled",
+ "最近三分钟已检测到核心连接（不等同于代理成功）": "Core connection seen within 3 minutes; proxy success unverified",
+ "最近在线": "Recently online",
+ "有 ": "There are ",
+ "有有效 DHCP 租约 · 尚未检测到核心连接": "Valid DHCP lease · No recent core connection",
+ "未选择": "Not selected",
+ "本机": "This device",
+ "这台设备": "This device",
+ "未命名设备": "Unnamed device",
+ "核心与 DHCP 在线": "Core & DHCP online",
+ "核心内存 ": "Core memory ",
+ "核心暂不可用": "Core unavailable",
+ "正在切换并验证节点…": "Switching and checking nodes…",
+ "正在处理…": "Working…",
+ "每秒采集 · 已更新 ": "Sampled every second · Updated ",
+ "流量数据暂时不可用，图表保留最近记录": "Traffic temporarily unavailable; recent chart retained",
+ "流量数据连接失败": "Could not load traffic",
+ "电脑": "Computer",
+ "电视": "TV",
+ "直连策略": "Direct policy",
+ "等待设备重新接入": "Waiting for device",
+ "给这台设备起个名字": "Name this device",
+ "网关 · ": "Gateway · ",
+ "自动接入尚未启用，设备开关仅对已使用 NAS 网关的设备生效。": "Automatic setup is inactive. Device switches only affect clients using the NAS gateway.",
+ "订阅已切换": "Subscription switched",
+ "订阅已更新": "Subscription refreshed",
+ "设备连接网络后会自动显示在这里。": "Devices appear here after joining the network.",
+ "路由器已识别": "Identified by router",
+ "路由器设备信息已同步": "Router device names synced",
+ "路由器设备信息暂未同步": "Router device names unavailable",
+ "路由器：": "Router: ",
+ "连接失败": "Connection failed",
+ "连接异常": "Connection error",
+ "，下载 ": ", download ",
+ "请登录": "Please sign in",
+ "订阅信息读取失败": "Could not load subscription details",
+ "不存在": "Not found",
+ "来源不允许": "Origin not allowed",
+ "需要 JSON": "JSON required",
+ "请求无效": "Invalid request",
+ "尝试过多，请五分钟后再试": "Too many attempts; try again in five minutes",
+ "密码不正确": "Incorrect password",
+ "请求验证失败": "Request verification failed",
+ "设备参数无效": "Invalid device parameters",
+ "设备尚未发现": "Device not discovered",
+ "设备暂无有效地址，请重新连接 Wi-Fi": "No valid device address; reconnect to Wi-Fi",
+ "规则未成功生效，已尝试恢复原设置": "Could not apply rules; attempted to restore previous settings",
+ "规则已生效，部分旧连接请手动重开": "Rules applied; reopen apps to replace some old connections",
+ "未知订阅操作": "Unknown subscription action",
+ "订阅操作失败，请检查链接或核心连接": "Subscription operation failed; check the URL or core connection",
+ "订阅链接过长": "Subscription URL is too long",
+ "请输入 HTTP/HTTPS 订阅链接，不支持链接中的登录凭据": "Enter an HTTP/HTTPS subscription URL without embedded login credentials",
+ "名称需要 1–60 个字符": "Name must contain 1–60 characters",
+ "最多保存 20 个订阅": "You can save up to 20 subscriptions",
+ "这个订阅已经保存": "This subscription already exists",
+ "请先切换到其他订阅，再删除当前订阅": "Switch to another subscription before deleting the active one",
+ "订阅不存在": "Subscription not found",
+ "切换失败，原订阅恢复未确认，请检查核心状态": "Switch failed; restoration unconfirmed. Check core status",
+ "切换失败，已恢复原订阅；请检查链接、格式或网络": "Switch failed; previous subscription restored. Check the URL, format or network",
+ "设置参数无效": "Invalid settings",
+ "密码参数无效": "Invalid password parameters",
+ "新密码需要 16–256 个字符，首尾不能有空格": "New password must contain 16–256 characters without leading or trailing spaces",
+ "两次输入的新密码不一致": "New passwords do not match",
+ "当前密码不正确": "Current password is incorrect",
+ "管理密码不能与核心密钥相同": "Admin password must differ from the core API key",
+ "默认策略已保存，已有设备的开关未修改。": "Default policy saved. Existing switches unchanged.",
+ "密码已修改，请用新密码重新登录。": "Password changed. Sign in with the new password.",
+ "正在保存…": "Saving…",
+ "新设备默认智能分流 · 需使用 NAS 网关": "New devices: smart routing · NAS gateway required",
+ "新设备默认直连 · 需使用 NAS 网关": "New devices: direct · NAS gateway required",
+ "新设备默认智能分流": "New devices: smart routing",
+ "新设备默认直连": "New devices: direct",
+ "已启用": "Enabled",
+ "未启用": "Inactive",
+ "尚未开始采样": "Not sampled yet",
+ "演示模式：所有设备和流量均为虚构。": "Demo: all devices and traffic are fictional.",
+ "仅更改虚构示例，未修改任何网络配置": "Only fictional data changed; no network settings modified",
+ "演示模式不保存订阅或认证配置": "The demo does not save subscriptions or credentials",
+ "演示模式不修改密码": "The demo does not change passwords",
+ "演示数据 · 未连接真实网络 · 开关仅修改本地示例": "Fictional demo · No real network connected · Switches change examples only",
+ "设备通过 DHCP 和局域网邻居记录发现，名称会尝试从 DHCP 和 mDNS 自动读取；最近在线表示近期有网络响应，不保证设备当前仍在线。MAC 地址发生变化时会被视为新设备，使用当前默认策略。设备名称旁的代理流量为采样累计，只统计实际代理连接的上传与下载，不含直连；短连接及采集停机期间可能漏计，不能代替订阅账单。": "Devices are discovered from DHCP and neighbor records, with names from DHCP or mDNS. Recently online means a recent network response. A changed MAC is a new device and follows the configured default policy. Per-device proxy traffic is sampled upload plus download, excluding direct traffic. Short connections and downtime may be missed; these are not billing figures."
+};
+function t(value){if(!value)return value||'';if(currentLanguage()==='zh-CN')return value;if(value.startsWith('设备同步失败：'))return 'Device discovery failed: '+value.split('：').slice(1).join(':');return EN[value]||value;}
+function dateTime(value){return value?new Date(value*1000).toLocaleString(currentLanguage()):t('尚未开始采样');}
+const staticText=[],staticAttributes=[];
+function setupLanguage(){
+ const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;
+ while(node=walker.nextNode()){if(['SCRIPT','STYLE'].includes(node.parentElement.tagName))continue;const key=node.nodeValue.trim();if(EN[key])staticText.push({node,key,prefix:node.nodeValue.match(/^\s*/)[0],suffix:node.nodeValue.match(/\s*$/)[0]});}
+ document.querySelectorAll('[placeholder],[aria-label],[title]').forEach(element=>{for(const name of ['placeholder','aria-label','title']){const key=element.getAttribute(name);if(key&&EN[key])staticAttributes.push({element,name,key});}});
+ applyLanguage();
+}
+function applyLanguage(){
+ document.documentElement.lang=currentLanguage();document.title=t('NAS 网络控制中心');
+ for(const {node,key,prefix,suffix}of staticText)node.nodeValue=prefix+t(key)+suffix;
+ for(const {element,name,key}of staticAttributes)element.setAttribute(name,t(key));
+ $('language').value=languagePreference;
+ if(lastDevices)renderDefault(lastDevices.preferences?.new_device_proxy||false);
+ renderAbout();
+}
+
+
 let csrf='',busy=false;const $=id=>document.getElementById(id);const icon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M10 18h4"/></svg>';
-async function request(path,body){const opts=body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':csrf},body:JSON.stringify(body)};const r=await fetch(path,opts);const j=await r.json();if(r.status===401){$('login').classList.remove('hidden');$('panel').classList.add('hidden');$('footer').classList.add('hidden')}if(!r.ok)throw Error(j.error||'连接失败');return j}
+async function request(path,body){const opts=body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-Token':csrf},body:JSON.stringify(body)};const r=await fetch(path,opts);const j=await r.json();if(r.status===401)resetPrivateUI();if(!r.ok)throw Error(t(j.error||'连接失败'));return j}
 function text(tag,value,cls){const e=document.createElement(tag);e.textContent=value;if(cls)e.className=cls;return e}
-async function load(){if(busy)return;try{const d=await request('/api/devices');csrf=d.csrf;$('login').classList.add('hidden');$('panel').classList.remove('hidden');$('footer').classList.remove('hidden');$('status').textContent=d.core_ok?(d.dhcp?'核心与 DHCP 在线':'DHCP 尚未接管'):'旁路由未连接';$('status').className='badge'+(d.core_ok&&d.dhcp?'':' statusbad');const pending=d.devices.filter(x=>x.enabled&&!x.dhcp_assigned&&!x.gateway_observed);$('notice').textContent=d.error||(!d.dhcp?'自动接入尚未启用，设备开关仅对已使用 NAS 网关的设备生效。':pending.length?'有 '+pending.length+' 台已开启分流的设备尚未确认接入。若保留旧租约，请忽略此 Wi-Fi 后重新输入密码加入，IP/DNS保持自动。':'');$('core').textContent='网关 · '+d.gateway+' / Mihomo '+d.version+' · '+(d.router_sync?.ok?'路由器设备信息已同步':'路由器设备信息暂未同步');$('count').textContent='已发现设备 · '+d.devices.length;$('enabled').textContent=d.devices.filter(x=>x.enabled).length+' / '+d.devices.length;$('devices').replaceChildren();if(!d.devices.length)$('devices').append(text('div','设备连接网络后会自动显示在这里。','empty'));for(const x of d.devices){const row=text('div','','row');const pic=text('div','','icon');pic.innerHTML=icon;const details=text('div','','details');const name=text('div','','name');name.append(text('span',x.label));if(x.is_this_device)name.append(text('span','本机','this'));const flow=text('span','','deviceflow');flow.dataset.mac=x.mac;setDeviceFlow(flow,x.proxy_traffic,x.proxy_traffic_ok,x.proxy_traffic_since);name.append(flow);const edit=text('button','命名','edit');edit.onclick=async()=>{const v=prompt('给这台设备起个名字',x.name||x.router_name||x.mdns_name||x.hostname||'');if(v===null)return;await change(x,{name:v})};name.append(edit);details.append(name,text('div',x.ip||'等待设备重新接入','address'));const meta=text('div','','meta'+(x.online?' online':''));meta.append(text('span','','dot'),document.createTextNode((x.online?'最近在线':'已记录')+' · '+x.mac));details.append(meta);details.append(text('div',x.gateway_observed?'最近三分钟已检测到核心连接（不等同于代理成功）':x.dhcp_assigned?'有有效 DHCP 租约 · 尚未检测到核心连接':'接入待确认 · 静态地址或旧租约需核对','meta'));const types={computer:'电脑',phone:'手机',mobile:'手机',television:'电视',Lamp:'智能灯',MultiSocket:'排插',pad:'平板'};const identity=[x.router_brand,types[x.router_type]||x.router_type,x.router_model].filter(Boolean).join(' · ');if(x.router_seen)details.append(text('div',(x.router_name?'路由器：'+x.router_name+' · ':'')+(identity||'路由器已识别')+' · '+(x.router_source||'华为')+'提供','meta'));const wrap=text('div','','switchwrap');const toggle=text('button','','toggle'+(x.enabled?' on':''));toggle.setAttribute('role','switch');toggle.setAttribute('aria-checked',String(!!x.enabled));toggle.setAttribute('aria-label',x.label+' 智能代理');toggle.disabled=!x.ip;toggle.onclick=()=>change(x,{enabled:!x.enabled});wrap.append(toggle,text('span',x.enabled?(x.gateway_observed?'智能策略已启用':x.dhcp_assigned?'智能代理 · 待验证':'智能代理 · 待接入'):'直连策略','mode'+(x.enabled?' on':'')));row.append(pic,details,wrap);$('devices').append(row)}}catch(e){if(!$('panel').classList.contains('hidden')){$('notice').textContent=e.message;$('status').textContent='连接异常';$('status').className='badge statusbad'}}}
+async function load(){if(busy)return;try{const d=await request('/api/devices');csrf=d.csrf;lastDevices=d;renderDefault(d.preferences?.new_device_proxy||false);renderAbout();$('login').classList.add('hidden');$('panel').classList.remove('hidden');$('footer').classList.remove('hidden');$('status').textContent=d.core_ok?(d.dhcp?t('核心与 DHCP 在线'):t('DHCP 尚未接管')):t('旁路由未连接');$('status').className='badge'+(d.core_ok&&d.dhcp?'':' statusbad');const pending=d.devices.filter(x=>x.enabled&&!x.dhcp_assigned&&!x.gateway_observed);$('notice').textContent=t(d.error)||(!d.dhcp?t('自动接入尚未启用，设备开关仅对已使用 NAS 网关的设备生效。'):pending.length?t('有 ')+pending.length+t(' 台已开启分流的设备尚未确认接入。若保留旧租约，请忽略此 Wi-Fi 后重新输入密码加入，IP/DNS保持自动。'):'');$('core').textContent=t('网关 · ')+d.gateway+' / Mihomo '+d.version+' · '+(d.router_sync?.ok?t('路由器设备信息已同步'):t('路由器设备信息暂未同步'));$('count').textContent=t('已发现设备 · ')+d.devices.length;$('enabled').textContent=d.devices.filter(x=>x.enabled).length+' / '+d.devices.length;$('devices').replaceChildren();if(!d.devices.length)$('devices').append(text('div',t('设备连接网络后会自动显示在这里。'),'empty'));for(const x of d.devices){const row=text('div','','row');const pic=text('div','','icon');pic.innerHTML=icon;const details=text('div','','details');const name=text('div','','name');name.append(text('span', ['这台设备','未命名设备'].includes(x.label)?t(x.label):x.label));if(x.is_this_device)name.append(text('span',t('本机'),'this'));const flow=text('span','','deviceflow');flow.dataset.mac=x.mac;setDeviceFlow(flow,x.proxy_traffic,x.proxy_traffic_ok,x.proxy_traffic_since);name.append(flow);const edit=text('button',t('命名'),'edit');edit.onclick=async()=>{const v=prompt(t('给这台设备起个名字'),x.name||x.router_name||x.mdns_name||x.hostname||'');if(v===null)return;await change(x,{name:v})};name.append(edit);details.append(name,text('div',x.ip||t('等待设备重新接入'),'address'));const meta=text('div','','meta'+(x.online?' online':''));meta.append(text('span','','dot'),document.createTextNode((x.online?t('最近在线'):t('已记录'))+' · '+x.mac));details.append(meta);details.append(text('div',x.gateway_observed?t('最近三分钟已检测到核心连接（不等同于代理成功）'):x.dhcp_assigned?t('有有效 DHCP 租约 · 尚未检测到核心连接'):t('接入待确认 · 静态地址或旧租约需核对'),'meta'));const types={computer:t('电脑'),phone:t('手机'),mobile:t('手机'),television:t('电视'),Lamp:t('智能灯'),MultiSocket:t('排插'),pad:t('平板')};const identity=[x.router_brand,types[x.router_type]||x.router_type,x.router_model].filter(Boolean).join(' · ');if(x.router_seen)details.append(text('div',(x.router_name?t('路由器：')+x.router_name+' · ':'')+(identity||t('路由器已识别'))+' · '+(x.router_source||t('华为'))+t('提供'),'meta'));const wrap=text('div','','switchwrap');const toggle=text('button','','toggle'+(x.enabled?' on':''));toggle.setAttribute('role','switch');toggle.setAttribute('aria-checked',String(!!x.enabled));toggle.setAttribute('aria-label',x.label+t(' 智能代理'));toggle.disabled=!x.ip;toggle.onclick=()=>change(x,{enabled:!x.enabled});wrap.append(toggle,text('span',x.enabled?(x.gateway_observed?t('智能策略已启用'):x.dhcp_assigned?t('智能代理 · 待验证'):t('智能代理 · 待接入')):t('直连策略'),'mode'+(x.enabled?' on':'')));row.append(pic,details,wrap);$('devices').append(row)}}catch(e){if(!$('panel').classList.contains('hidden')){$('notice').textContent=e.message;$('status').textContent=t('连接异常');$('status').className='badge statusbad'}}}
 let subBusy=false;
-async function loadSubscriptions(){if(subBusy||$('panel').classList.contains('hidden'))return;try{const d=await request('/api/subscriptions');$('substatus').textContent=d.available?'当前节点：'+(d.node||'未选择')+' · '+d.node_count+' 个节点'+(d.updated?' · 更新于 '+new Date(d.updated).toLocaleString():''):'核心暂不可用';if(d.usage?.Total){const u=d.usage;$('substatus').textContent+=' · 订阅用量 '+bytes((u.Upload||0)+(u.Download||0))+' / '+bytes(u.Total)+(u.Expire?' · 到期 '+new Date(u.Expire*1000).toLocaleDateString():'')}$('sublist').replaceChildren();for(const x of d.items){const row=text('div','','subrow');const info=text('div','');info.append(text('div',x.name+(x.id===d.active?' · 使用中':''),'subname'),text('div',x.host,'subdetail'));const buttons=text('div','','subbuttons');if(x.id!==d.active){const sw=text('button','切换','small');sw.onclick=()=>subscriptionAction({action:'switch',id:x.id});const del=text('button','删除','edit');del.onclick=()=>{if(confirm('删除订阅“'+x.name+'”？'))subscriptionAction({action:'remove',id:x.id})};buttons.append(sw,del)}else buttons.append(text('span','当前订阅','badge'));row.append(info,buttons);$('sublist').append(row)}}catch(e){$('suberror').textContent=e.message}}
-async function subscriptionAction(body){if(subBusy)return;subBusy=true;$('suberror').textContent=body.action==='switch'?'正在切换并验证节点…':'正在处理…';document.querySelectorAll('.subscriptions button').forEach(x=>x.disabled=true);try{await request('/api/subscriptions',body);$('suberror').textContent=body.action==='switch'?'订阅已切换':body.action==='refresh'?'订阅已更新':'已保存';if(body.action==='add'){$('subform').reset();$('subform').classList.add('hidden')}}catch(e){$('suberror').textContent=e.message}finally{subBusy=false;document.querySelectorAll('.subscriptions button').forEach(x=>x.disabled=false);await loadSubscriptions();await load()}}
-$('opensettings').onclick=()=>{const e=$('subscription-settings');e.open=true;e.scrollIntoView({behavior:'smooth',block:'start'})};
+async function loadSubscriptions(){if(subBusy||$('panel').classList.contains('hidden'))return;try{const d=await request('/api/subscriptions');$('substatus').textContent=d.available?t('当前节点：')+(d.node||t('未选择'))+' · '+d.node_count+t(' 个节点')+(d.updated?t(' · 更新于 ')+new Date(d.updated).toLocaleString(currentLanguage()):''):t('核心暂不可用');if(d.usage?.Total){const u=d.usage;$('substatus').textContent+=t(' · 订阅用量 ')+bytes((u.Upload||0)+(u.Download||0))+' / '+bytes(u.Total)+(u.Expire?t(' · 到期 ')+new Date(u.Expire*1000).toLocaleDateString(currentLanguage()):'')}$('sublist').replaceChildren();for(const x of d.items){const row=text('div','','subrow');const info=text('div','');info.append(text('div',x.name+(x.id===d.active?t(' · 使用中'):''),'subname'),text('div',x.host,'subdetail'));const buttons=text('div','','subbuttons');if(x.id!==d.active){const sw=text('button',t('切换'),'small');sw.onclick=()=>subscriptionAction({action:'switch',id:x.id});const del=text('button',t('删除'),'edit');del.onclick=()=>{if(confirm(t('删除订阅“')+x.name+'”？'))subscriptionAction({action:'remove',id:x.id})};buttons.append(sw,del)}else buttons.append(text('span',t('当前订阅'),'badge'));row.append(info,buttons);$('sublist').append(row)}}catch(e){$('suberror').textContent=e.message}}
+async function subscriptionAction(body){if(subBusy)return;subBusy=true;$('suberror').textContent=body.action==='switch'?t('正在切换并验证节点…'):t('正在处理…');document.querySelectorAll('.subscriptions button').forEach(x=>x.disabled=true);try{await request('/api/subscriptions',body);$('suberror').textContent=body.action==='switch'?t('订阅已切换'):body.action==='refresh'?t('订阅已更新'):t('已保存');if(body.action==='add'){$('subform').reset();$('subform').classList.add('hidden')}}catch(e){$('suberror').textContent=e.message}finally{subBusy=false;document.querySelectorAll('.subscriptions button').forEach(x=>x.disabled=false);await loadSubscriptions();await load()}}
+
 $('addsub').onclick=()=>$('subform').classList.toggle('hidden');$('updatesub').onclick=()=>subscriptionAction({action:'refresh'});$('subform').onsubmit=e=>{e.preventDefault();subscriptionAction({action:'add',name:$('subname').value,url:$('suburl').value})};
-function setDeviceFlow(element,value,ok,since){value=value||{upload:0,download:0,total:0};element.textContent=ok?'代理 ≈ '+bytes(value.total):'代理 ≈ '+bytes(value.total)+' · 暂停更新';element.title='代理采样累计：上传 '+bytes(value.upload)+'，下载 '+bytes(value.download)+'。自 '+new Date(since*1000).toLocaleString()+' 开始，不含直连；短连接可能漏计，非订阅账单。';}
+function setDeviceFlow(element,value,ok,since){value=value||{upload:0,download:0,total:0};element.textContent=ok?t('代理 ≈ ')+bytes(value.total):t('代理 ≈ ')+bytes(value.total)+t(' · 暂停更新');element.title=t('代理采样累计：上传 ')+bytes(value.upload)+t('，下载 ')+bytes(value.download)+t('。自 ')+new Date(since*1000).toLocaleString(currentLanguage())+t(' 开始，不含直连；短连接可能漏计，非订阅账单。');}
 let statsLoading=false;
 function bytes(v,rate=false){const units=['B','kB','MB','GB','TB'];let i=0;while(v>=1000&&i<4){v/=1000;i++}return v.toFixed(i?1:0)+' '+units[i]+(rate?'/s':'')}
-function chart(history){const svg=$('speedchart');svg.replaceChildren();const ns='http://www.w3.org/2000/svg';const end=history.length?history[history.length-1].time:Date.now()/1000;const peak=Math.max(1000,...history.flatMap(x=>[x.up,x.down]));$('chartpeak').textContent='峰值 '+bytes(peak,true);for(let i=0;i<4;i++){const l=document.createElementNS(ns,'line');for(const [k,v]of Object.entries({x1:0,x2:900,y1:10+i*50,y2:10+i*50,stroke:'#e7eee8'}))l.setAttribute(k,v);svg.append(l)}for(const [key,color]of [['down','#16864b'],['up','#4387d2']]){let path='',prev=0;for(const p of history){const x=Math.max(0,900*(p.time-end+180)/180),y=160-150*p[key]/peak;path+=(prev&&p.time-prev<4?' L':' M')+x.toFixed(1)+','+y.toFixed(1);prev=p.time}const line=document.createElementNS(ns,'path');line.setAttribute('d',path);line.setAttribute('fill','none');line.setAttribute('stroke',color);line.setAttribute('stroke-width','2');line.setAttribute('vector-effect','non-scaling-stroke');svg.append(line)}}
-async function loadStats(){if(statsLoading||document.hidden||$('panel').classList.contains('hidden'))return;statsLoading=true;try{const d=await request('/api/stats');if(d.device_traffic){for(const e of document.querySelectorAll('.deviceflow'))setDeviceFlow(e,d.device_traffic.devices[e.dataset.mac],d.device_traffic.ok,d.device_traffic.since)}chart(d.history);$('statsstate').textContent=d.ok?'每秒采集 · 已更新 '+new Date(d.updated*1000).toLocaleTimeString():'流量数据暂时不可用，图表保留最近记录';for(const [id,value]of [['downrate',bytes(d.down,true)],['uprate',bytes(d.up,true)],['downbits',(d.down*8/1e6).toFixed(2)+' Mbps'],['upbits',(d.up*8/1e6).toFixed(2)+' Mbps'],['totaltraffic',bytes(d.upload_total+d.download_total)],['totals','↓ '+bytes(d.download_total)+' / ↑ '+bytes(d.upload_total)],['connections',String(d.connections)],['memory','核心内存 '+bytes(d.memory)]])$(id).textContent=d.ok?value:'—'}catch(e){$('statsstate').textContent='流量数据连接失败'}finally{statsLoading=false}}
-async function change(x,update){busy=true;document.querySelectorAll('.toggle').forEach(x=>x.disabled=true);try{const r=await request('/api/device',{mac:x.mac,...update});$('notice').textContent=r.warning||''}catch(e){alert(e.message)}finally{busy=false;await load()}}
-$('form').onsubmit=async e=>{e.preventDefault();$('loginbtn').disabled=true;$('loginerror').textContent='';try{await request('/api/login',{password:$('password').value});$('password').value='';await load();await loadStats();await loadSubscriptions()}catch(e){$('loginerror').textContent=e.message}finally{$('loginbtn').disabled=false}};$('refresh').onclick=load;$('logout').onclick=async()=>{await request('/api/logout',{});await load()};load();setInterval(load,10000);setInterval(loadStats,2000);setInterval(loadSubscriptions,10000);
+function chart(history){const svg=$('speedchart');svg.replaceChildren();const ns='http://www.w3.org/2000/svg';const end=history.length?history[history.length-1].time:Date.now()/1000;const peak=Math.max(1000,...history.flatMap(x=>[x.up,x.down]));$('chartpeak').textContent=t('峰值 ')+bytes(peak,true);for(let i=0;i<4;i++){const l=document.createElementNS(ns,'line');for(const [k,v]of Object.entries({x1:0,x2:900,y1:10+i*50,y2:10+i*50,stroke:'#e7eee8'}))l.setAttribute(k,v);svg.append(l)}for(const [key,color]of [['down','#16864b'],['up','#4387d2']]){let path='',prev=0;for(const p of history){const x=Math.max(0,900*(p.time-end+180)/180),y=160-150*p[key]/peak;path+=(prev&&p.time-prev<4?' L':' M')+x.toFixed(1)+','+y.toFixed(1);prev=p.time}const line=document.createElementNS(ns,'path');line.setAttribute('d',path);line.setAttribute('fill','none');line.setAttribute('stroke',color);line.setAttribute('stroke-width','2');line.setAttribute('vector-effect','non-scaling-stroke');svg.append(line)}}
+async function loadStats(force=false){if(statsLoading||(document.hidden&&!force&&lastStats)||$('panel').classList.contains('hidden'))return;statsLoading=true;try{const d=await request('/api/stats');lastStats=d;renderAbout();if(d.device_traffic){for(const e of document.querySelectorAll('.deviceflow'))setDeviceFlow(e,d.device_traffic.devices[e.dataset.mac],d.device_traffic.ok,d.device_traffic.since)}chart(d.history);$('statsstate').textContent=d.ok?t('每秒采集 · 已更新 ')+new Date(d.updated*1000).toLocaleTimeString(currentLanguage()):t('流量数据暂时不可用，图表保留最近记录');for(const [id,value]of [['downrate',bytes(d.down,true)],['uprate',bytes(d.up,true)],['downbits',(d.down*8/1e6).toFixed(2)+' Mbps'],['upbits',(d.up*8/1e6).toFixed(2)+' Mbps'],['totaltraffic',bytes(d.upload_total+d.download_total)],['totals','↓ '+bytes(d.download_total)+' / ↑ '+bytes(d.upload_total)],['connections',String(d.connections)],['memory',t('核心内存 ')+bytes(d.memory)]])$(id).textContent=d.ok?value:'—'}catch(e){$('statsstate').textContent=t('流量数据连接失败')}finally{statsLoading=false}}
+async function change(x,update){busy=true;document.querySelectorAll('.toggle').forEach(x=>x.disabled=true);try{const r=await request('/api/device',{mac:x.mac,...update});$('notice').textContent=t(r.warning)||''}catch(e){alert(e.message)}finally{busy=false;await load()}}
+$('form').onsubmit=async e=>{e.preventDefault();$('loginbtn').disabled=true;$('loginerror').textContent='';try{await request('/api/login',{password:$('password').value});$('password').value='';await load();await loadStats();await loadSubscriptions()}catch(e){$('loginerror').textContent=e.message}finally{$('loginbtn').disabled=false}};$('refresh').onclick=load;$('logout').onclick=async()=>{await request('/api/logout',{});resetPrivateUI();await load()};load();setInterval(()=>{if(!$('panel').classList.contains('hidden'))load()},10000);setInterval(loadStats,2000);setInterval(loadSubscriptions,10000);
+
+
+function renderDefault(value){$('defaultsummary').textContent=t(value?'新设备默认智能分流 · 需使用 NAS 网关':'新设备默认直连 · 需使用 NAS 网关');$('defaultfooter').textContent=t(value?'新设备默认智能分流':'新设备默认直连');}
+function renderAbout(){
+ if(lastSettings){$('appversion').textContent=lastSettings.app_version;$('gatewayinfo').textContent=lastSettings.gateway;$('upstreaminfo').textContent=lastSettings.upstream;$('subnetinfo').textContent=lastSettings.subnet;}
+ if(lastDevices){$('coreversion').textContent=lastDevices.version||'—';$('dhcpstate').textContent=t(lastDevices.dhcp?'已启用':'未启用');}
+ if(lastStats)$('trafficsince').textContent=dateTime(lastStats.device_traffic?.since);
+}
+function section(name){
+ document.querySelectorAll('.settingsnav [data-section]').forEach(button=>{const active=button.dataset.section===name;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;$('settings-'+button.dataset.section).classList.toggle('hidden',!active);});
+}
+function resetPrivateUI(){lastDevices=lastSettings=lastStats=null;csrf='';$('passwordform').reset();$('login').classList.remove('hidden');$('panel').classList.add('hidden');$('footer').classList.add('hidden');$('settingsdialog').close();}
+async function openSettings(){
+ section('general');const loggedIn=!$('panel').classList.contains('hidden');$('settings-login-note').classList.toggle('hidden',loggedIn);$('preferenceform').classList.toggle('hidden',!loggedIn);for(const id of ['tab-password','tab-about','settings-subscriptions'])$(id).disabled=!loggedIn;
+ $('preferencesstatus').textContent='';$('passwordstatus').textContent='';$('language').value=languagePreference;$('settingsdialog').showModal();
+ if(loggedIn)try{lastSettings=await request('/api/settings');csrf=lastSettings.csrf||csrf;$('defaultpolicy').value=lastSettings.preferences.new_device_proxy?'smart':'direct';renderAbout();}catch(e){$('preferencesstatus').textContent=e.message;}
+}
+$('opensettings').onclick=openSettings;$('loginsettings').onclick=openSettings;
+$('closesettings').onclick=()=>$('settingsdialog').close();
+$('settingsdialog').addEventListener('close',()=>$('passwordform').reset());
+$('settingsdialog').addEventListener('click',event=>{if(event.target===$('settingsdialog')){const r=event.target.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)event.target.close();}});
+for(const button of document.querySelectorAll('.settingsnav [data-section]')){
+ button.onclick=()=>section(button.dataset.section);
+ button.onkeydown=event=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(event.key))return;event.preventDefault();const buttons=[...document.querySelectorAll('.settingsnav [data-section]')].filter(x=>!x.disabled);let i=buttons.indexOf(button);i=event.key==='Home'?0:event.key==='End'?buttons.length-1:(i+(['ArrowLeft','ArrowUp'].includes(event.key)?-1:1)+buttons.length)%buttons.length;section(buttons[i].dataset.section);buttons[i].focus();};
+}
+$('settings-subscriptions').onclick=()=>{$('settingsdialog').close();const e=$('subscription-settings');e.open=true;e.scrollIntoView({behavior:'smooth',block:'start'});};
+$('language').onchange=async()=>{languagePreference=$('language').value;try{localStorage.setItem('ndf-language',languagePreference);}catch(e){}applyLanguage();$('preferencesstatus').textContent='';$('passwordstatus').textContent='';if(!$('panel').classList.contains('hidden')){await load();await loadStats(true);await loadSubscriptions();}};
+$('preferenceform').onsubmit=async event=>{
+ event.preventDefault();$('savepreferences').disabled=true;$('preferencesstatus').className='settingsstatus';$('preferencesstatus').textContent=t('正在保存…');
+ try{const result=await request('/api/settings',{new_device_proxy:$('defaultpolicy').value==='smart'});if(lastSettings)lastSettings.preferences=result.preferences;$('preferencesstatus').textContent=t('默认策略已保存，已有设备的开关未修改。');await load();}catch(e){$('preferencesstatus').className='settingsstatus bad';$('preferencesstatus').textContent=e.message;}finally{$('savepreferences').disabled=false;}
+};
+$('passwordform').onsubmit=async event=>{
+ event.preventDefault();$('passwordstatus').className='settingsstatus';if($('newpassword').value!==$('confirmpassword').value){$('passwordstatus').textContent=t('两次输入的新密码不一致');$('passwordstatus').className+=' bad';return;}
+ $('savepassword').disabled=true;
+ try{await request('/api/password',{current_password:$('currentpassword').value,new_password:$('newpassword').value,confirm_password:$('confirmpassword').value});resetPrivateUI();$('loginerror').textContent=t('密码已修改，请用新密码重新登录。');$('password').focus();}catch(e){$('passwordstatus').className='settingsstatus bad';$('passwordstatus').textContent=e.message;}finally{$('savepassword').disabled=false;}
+};
+setupLanguage();
+
 </script></html>

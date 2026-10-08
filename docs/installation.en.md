@@ -24,7 +24,7 @@ After the single-client test succeeds, disable the main router's DHCP, then run:
 docker compose exec controller python3 /app/dhcp.py enable --confirm-main-router-dhcp-off
 ```
 
-Restore client automatic IP/DNS and renew leases. Confirm the received gateway/DNS equal core_ip. New devices default direct. The command only checks the core API; it cannot prove main-router DHCP is off or routing works.
+Restore client automatic IP/DNS and renew leases. Confirm the received gateway/DNS equal core_ip. New devices initially default direct; the settings menu can change the default for future devices. The command only checks the core API; it cannot prove main-router DHCP is off or routing works.
 
 Do not expose panel, DNS, mixed proxy or core API ports publicly. HTTP has no transport encryption; HTTPS reverse proxy setup is left to the operator and requires a matching panel_origin. A trusted panel administrator can supply URLs fetched by the core, so do not share admin access with untrusted users.
 
@@ -59,3 +59,9 @@ The command regenerates dnsmasq configuration. Device status separately reports 
 ## Updating from rc.1
 
 Back up runtime and .env privately, fetch rc.2, then run `sh scripts/update.sh`. It builds first, stops the controller with a 30-second grace period, and recreates only the controller while leaving the core and network in place. Do not use forced container removal; SIGTERM saves traffic counters. Updates do not automatically opt in to authoritative DHCP.
+
+## Updating to rc.3 / 更新到 rc.3
+
+Back up runtime and .env privately, fetch rc.3, and run `sh scripts/update.sh`. The controller stops gracefully before recreation. Existing device switches, subscriptions and sampled totals remain in runtime. Missing preferences.json defaults to direct only for newly discovered devices. The new settings menu allows language, future-device defaults and password changes; no DHCP/subnet migration is performed automatically.
+
+更新前私下备份 runtime 和 .env，获取 rc.3 后运行 `sh scripts/update.sh`。已有设备开关保持，新设备初始默认直连；网页改密后需重新登录。普通设置不会变更 DHCP/网段。

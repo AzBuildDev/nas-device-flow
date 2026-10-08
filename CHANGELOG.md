@@ -1,3 +1,13 @@
+# 0.1.0-rc.3
+
+- Add a settings gear with General, Password, Access/Statistics and subscription shortcut.
+- Ship Chinese/English UI in one package, following browser language initially and remembering manual selection, including before login.
+- Add a private default policy for future devices; defaults OFF/direct, preserves existing switches and does not match identity by device name.
+- Add in-page password change with current-password verification, confirmation, 16–256 characters, CSRF/rate limiting, separate core secret and invalidation of all sessions.
+- Show read-only access/version/traffic-start information; ordinary settings do not edit DHCP or LAN addressing.
+- Update fictional demonstrations and bilingual installation/update guidance.
+- Fresh generic LAN installation, IPv6, failover, password reset and regional presets remain outside this release.
+
 # 0.1.0-rc.2
 
 - Separate configured policy, valid MAC/IP DHCP lease, and core connections observed within three minutes. A switch no longer implies proxy success.

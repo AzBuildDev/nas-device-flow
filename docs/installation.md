@@ -38,7 +38,7 @@ IPv4 是当前接管范围。主路由若下发公网 IPv6，客户端可能绕�
 docker compose exec controller python3 /app/dhcp.py enable --confirm-main-router-dhcp-off
 ```
 
-恢复客户端自动 IP/DNS并更新 DHCP 租约。确认网关和 DNS 都是核心 IP，再逐台开启代理。新的设备默认直连。启用脚本只能验证核心 API 可访问，无法自动证明主路由 DHCP 已关闭或所有线路正常。
+恢复客户端自动 IP/DNS并更新 DHCP 租约。确认网关和 DNS 都是核心 IP，再逐台开启代理。新设备初始默认直连；后续可通过设置选择首次发现设备的默认策略。启用脚本只能验证核心 API 可访问，无法自动证明主路由 DHCP 已关闭或所有线路正常。
 
 公网不要映射面板、DNS、混合代理和核心 API 端口。局域网管理使用 HTTP，密码在局域网链路上没有 TLS 保护；有需要可自行加 HTTPS 反向代理并同步修改 panel_origin。未提供自动 TLS 配置。
 
@@ -70,8 +70,14 @@ docker compose exec controller python3 /app/dhcp.py enable --confirm-main-router
 
 设备状态区分有效租约与最近三分钟核心连接。租约不证明设备使用该网关，核心连接也可能是直连或本机代理请求，不能证明国外站点已代理成功。见[接入诊断](diagnostics.md)。
 
-原运行环境已由用户确认 iPad 忽略旧 Wi-Fi 后仅输入密码重入并成功访问。重入时私人 MAC 改变，现场为新记录重新开启分流。这验证自动网络配置，不表示跨 MAC 自动继承开关。MAC变化仍作为新设备默认直连；不能凭设备名称继承授权。通用发布包干净安装仍待验收。
+原运行环境已由用户确认 iPad 忽略旧 Wi-Fi 后仅输入密码重入并成功访问。重入时私人 MAC 改变，现场为新记录重新开启分流。这验证自动网络配置，不表示跨 MAC 自动继承开关。MAC变化仍作为新设备，使用当前新设备默认策略（初始直连）；不能凭设备名称继承授权。通用发布包干净安装仍待验收。
 
 ## 从 rc.1 更新
 
 私下备份 runtime 和 .env，获取 rc.2 后执行 `sh scripts/update.sh`。先构建，再给控制器 30 秒正常退出时间，最后仅重建控制器；退出时保存流量，核心及网络保持运行。不要用强制删除替代正常停止。更新不会自动开启 authoritative DHCP。
+
+## Updating to rc.3 / 更新到 rc.3
+
+Back up runtime and .env privately, fetch rc.3, and run `sh scripts/update.sh`. The controller stops gracefully before recreation. Existing device switches, subscriptions and sampled totals remain in runtime. Missing preferences.json defaults to direct only for newly discovered devices. The new settings menu allows language, future-device defaults and password changes; no DHCP/subnet migration is performed automatically.
+
+更新前私下备份 runtime 和 .env，获取 rc.3 后运行 `sh scripts/update.sh`。已有设备开关保持，新设备初始默认直连；网页改密后需重新登录。普通设置不会变更 DHCP/网段。

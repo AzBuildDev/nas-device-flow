@@ -1,6 +1,6 @@
 {
   "project": "nas-device-flow",
-  "version": "0.1.0-rc.2",
+  "version": "0.1.0-rc.3",
   "own_source_files": [
     "app/server.py",
     "app/device_names.py",
@@ -23,6 +23,9 @@
     "tests/test_access_status.py",
     "scripts/dhcp_probe.py",
     "scripts/isolated-dhcp-test.sh",
-    "scripts/update.sh"
+    "scripts/update.sh",
+    "app/preferences.py",
+    "tests/test_preferences.py",
+    "tests/test_ui_language.py"
   ]
 }
