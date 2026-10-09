@@ -24,13 +24,13 @@ No forgotten-password reset wizard is included. No actual management password wa
 
 ## Access and statistics
 
-The about tab shows panel/core versions, gateway, upstream, subnet, DHCP state and the device-sampling start. These fields are read-only. DHCP enable/disable and subnet/gateway changes remain deployment operations. Subscription management is linked from the menu, with device control staying on the main screen.
+The about tab shows panel/core versions, gateway, upstream, subnet, DHCP state and the device-sampling start. These fields are read-only. The Automatic joining setup section can enable or stop NAS DHCP after operator confirmation. It does not change the router DHCP configuration or renew client leases. Subnet/gateway changes still require deployment configuration. Subscription management is linked from the menu, with device control staying on the main screen.
 
 ## 中文要点
 
 小齿轮二级菜单包含常规、管理密码、接入与统计及订阅入口。语言选择保存在当前浏览器；登录前也可切换。新设备初始默认直连，保存新默认只影响此后首次发现的 MAC。已有设备开关不变，随机 MAC 改变也按新默认处理，不按同名继承权限。
 
-改密需当前密码与新密码确认，成功后全部会话退出，核心密钥不变。只读网络信息帮助排查；普通设置不能更改 DHCP 或网段。更改语言不会自动适配其他地区的分流/DNS。
+改密需当前密码与新密码确认，成功后全部会话退出，核心密钥不变。只读网络信息帮助排查；「自动接入设置」可在确认条件后开启或停止 NAS DHCP；它不会修改主路由 DHCP 或更新客户端租约。网段和网关仍需通过部署配置修改。更改语言不会自动适配其他地区的分流/DNS。
 
 Automatic selection checks browser language preferences in order, including regional variants such as ja-JP, es-MX and fr-CA and ko-KR, and falls back to English if no language is supported. Device names and user content keep their original text.
 

@@ -2,9 +2,11 @@
 
 [English](nas-gui-install.md) · 简体中文
 
-这条流程不需要 AI 连接 NAS，也不需要 SSH、Python、修改 JSON 或在 NAS 上构建镜像。你在 NAS 的 Docker 管理界面启动安装项目，用浏览器生成配置，再导入正式项目。
+这条流程不需要 AI 连接 NAS，也不需要 SSH、在 NAS 宿主机安装 Python、修改 JSON 或在 NAS 上构建镜像。你在 NAS 的 Docker 管理界面启动安装项目，用浏览器生成配置，再导入正式项目。
 
 当前发布镜像面向 x86-64 Linux NAS。需要 Docker Compose 项目功能、host 和 macvlan 网络、`/dev/net/tun`，以及可关闭 DHCP 的主路由。NAS 与客户端在同一局域网。其他 NAS 是否满足这些条件需要自行确认；不能把支持 Compose 等同于已实机兼容。
+
+安装向导负责生成配置，不会修改主路由 DHCP、固定 NAS 管理地址或更新客户端租约。这些步骤需要你按下面的说明操作。默认不读取路由器账户；设备名称适配器需要另外手动配置，见[兼容说明](compatibility.md)。
 
 ## 1. 准备一个安装文件夹
 
@@ -18,7 +20,7 @@
 
 下载发布版本中的 `setup.compose.yaml`。在 NAS 的 Docker 管理应用中创建 Compose 项目，导入该文件或粘贴内容。项目名称使用 `nas-device-flow-setup`。
 
-只需把文件顶部这一行改成第 1 步创建的文件夹绝对路径：
+这份安装 YAML 的路径设置需要把文件顶部这一行改成第 1 步创建的文件夹绝对路径：
 
 ```yaml
 x-project-path: &project-path /volume1/docker/nas-device-flow
@@ -69,7 +71,7 @@ x-project-path: &project-path /volume1/docker/nas-device-flow
 
 测试通过后关闭主路由和其他 DHCP。在面板「设置 → 接入与统计 → 自动接入设置」确认三个条件并点击「开启自动接入」。不需要进入容器终端。程序检查核心可连接，但不能替你证明主路由已关闭 DHCP 或网页可正常访问。
 
-客户端恢复自动 IP/DNS，更新租约，确认网关和 DNS 都是核心 IP。如果重连仍保留旧租约，可以忽略 Wi-Fi 后重新输入密码加入。之后设备只需连接 Wi-Fi，代理开关由面板控制。
+客户端恢复自动 IP/DNS，更新租约，确认网关和 DNS 都是核心 IP。如果重连仍保留旧租约，可以忽略 Wi-Fi 后重新输入密码加入。确认设备收到核心网关和 DNS 后，日常加入这个 Wi-Fi 可保持自动 IP/DNS，代理开关由面板控制。MAC 变化会生成新设备记录，按当前新设备默认策略处理。
 
 ## 停用与更新
 
@@ -94,7 +96,7 @@ x-project-path: &project-path /volume1/docker/nas-device-flow
 
 ## Installer versus production panel / 安装入口与正式面板
 
-The installer uses the NAS management IPv4 address and port 9088, and reads interfaces from the NAS container host. The production panel uses its own macvlan IP. Test that panel from another device on the same LAN: NAS-host-to-macvlan communication is restricted, so a failure from the NAS browser does not establish a failure from other clients. Do not change the NAS gateway to work around this. Suggested addresses are not proof that they are unused.
+The installer uses the NAS management IPv4 address and port 9088, and reads interfaces from the NAS container host. The production panel uses its own macvlan IP. Test that panel from another device on the same LAN: NAS-host-to-macvlan communication is restricted, so a failure from the NAS browser does not establish a failure from other clients. Do not change the NAS gateway to work around this. Entered addresses still need confirmation in router and static-device settings; ARP silence does not prove they are unused.
 
 安装向导通过 NAS 管理 IP 的 9088 端口访问，从 NAS 宿主网络读取接口。正式面板使用独立的 macvlan IP，应在同一局域网的另一台设备上验证；NAS 宿主机访问 macvlan 受限制，宿主浏览器访问失败不等于其他设备访问失败，不要为此更改 NAS 网关。ARP 无响应也不是地址空闲保证。
 

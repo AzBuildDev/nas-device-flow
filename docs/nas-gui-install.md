@@ -6,6 +6,8 @@ You do not need an AI agent connected to the NAS, SSH, host Python, JSON editing
 
 The published image targets x86-64 Linux NAS systems. Your NAS needs a Docker Compose project interface, host and macvlan networking, and `/dev/net/tun`. The main router must allow DHCP to be disabled. Keep NAS and clients on the same LAN. Compose support alone does not establish hardware compatibility.
 
+The wizard generates deployment files. It does not change router DHCP, fix the NAS management address or renew client leases; you perform those steps below. Router accounts are not read by default. Optional device-name adapters need separate manual configuration; see [compatibility notes](compatibility.md).
+
 ## Create an installation folder
 
 Create a folder on the NAS and keep it after installation. `/volume1/docker/nas-device-flow` is an example for UGREEN or Synology; QNAP may use `/share/Container/...`. Use the actual Docker-host path on your system, not an SMB path or a folder on your computer. These vendor path examples are not compatibility test results.
@@ -79,9 +81,9 @@ See [validation status](release-readiness.md). Other vendors have not completed 
 
 ## Installer versus production panel / 安装入口与正式面板
 
-The installer uses the NAS management IPv4 address and port 9088, and reads interfaces from the NAS container host. The production panel uses its own macvlan IP. Test that panel from another device on the same LAN: NAS-host-to-macvlan communication is restricted, so a failure from the NAS browser does not establish a failure from other clients. Do not change the NAS gateway to work around this. Suggested addresses are not proof that they are unused.
+The installer uses the NAS management IPv4 address and port 9088, and reads interfaces from the NAS container host. The production panel uses its own macvlan IP. Test that panel from another device on the same LAN: NAS-host-to-macvlan communication is restricted, so a failure from the NAS browser does not establish a failure from other clients. Do not change the NAS gateway to work around this. Entered addresses still need confirmation in router and static-device settings; ARP silence does not prove they are unused.
 
-安装向导通过 NAS 管理 IP 的 9088 端口访问，从 NAS 宿主网络读取接口。正式面板使用独立的 macvlan IP，应在同一局域网的另一台设备上验证；NAS 宿主机访问 macvlan 受限制，宿主浏览器访问失败不等于其他设备访问失败，不要为此更改 NAS 网关。自动建议地址也不是空闲保证。
+安装向导通过 NAS 管理 IP 的 9088 端口访问，从 NAS 宿主网络读取接口。正式面板使用独立的 macvlan IP，应在同一局域网的另一台设备上验证；NAS 宿主机访问 macvlan 受限制，宿主浏览器访问失败不等于其他设备访问失败，不要为此更改 NAS 网关。填写的地址仍需在路由器和固定设备配置中确认，ARP 无响应不能证明空闲。
 
 Only interface, NAS IP, subnet and upstream gateway are detected. Core and panel are two distinct, confirmed-unused static addresses; the future DHCP range allocates client addresses and must exclude all infrastructure and static assignments. No working default IP is promised. The browser and terminal installers require these addresses explicitly.
 

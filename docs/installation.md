@@ -1,7 +1,7 @@
 # 安装、验收与恢复
 
 优先使用[在 NAS 界面中手动安装](nas-gui-install.zh-CN.md)，不需要 SSH。以下保留终端和手工配置方式。
-此候选版本面向会管理 Linux 网络与 Docker 的试用者。请先备份主路由 DHCP 设置，保留一台可手动设 IP 的管理设备。
+此手工配置流程面向会管理 Linux 网络与 Docker 的用户。请先备份主路由 DHCP 设置，保留一台可手动设 IP 的管理设备。
 
 ## 先准备网络
 
@@ -21,6 +21,7 @@ IPv4 是当前接管范围。主路由若下发公网 IPv6，客户端可能绕�
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 cp examples/settings.json config.local.json
+# All example addresses are fictional; replace them for your LAN.
 # Edit addresses and panel_origin before initialization; use the actual host interface.
 .venv/bin/python scripts/initialize.py --settings config.local.json --parent eth0
 docker compose config --quiet
@@ -83,11 +84,11 @@ docker compose exec controller python3 /app/dhcp.py enable --confirm-main-router
 
 原运行环境已由用户确认 iPad 忽略旧 Wi-Fi 后仅输入密码重入并成功访问。重入时私人 MAC 改变，现场为新记录重新开启分流。这验证自动网络配置，不表示跨 MAC 自动继承开关。MAC变化仍作为新设备，使用当前新设备默认策略（初始直连）；不能凭设备名称继承授权。通用发布包干净安装仍待验收。
 
-## 从 rc.1 更新
+## 历史升级说明：从 rc.1 到 rc.2
 
 私下备份 runtime 和 .env，获取 rc.2 后执行 `sh scripts/update.sh`。先构建，再给控制器 30 秒正常退出时间，最后仅重建控制器；退出时保存流量，核心及网络保持运行。不要用强制删除替代正常停止。更新不会自动开启 authoritative DHCP。
 
-## Updating to rc.4 / 更新到 rc.4
+## Historical upgrade to rc.4 / 历史 rc.4 升级说明
 
 Back up runtime and .env privately, fetch rc.4, and run `sh scripts/update.sh`. The controller stops gracefully before recreation. Existing device switches, subscriptions and sampled totals remain in runtime. Missing preferences.json defaults to direct only for newly discovered devices. The new settings menu allows language, future-device defaults and password changes; no DHCP/subnet migration is performed automatically.
 

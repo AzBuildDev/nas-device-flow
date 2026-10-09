@@ -1,7 +1,7 @@
 # Installation and recovery
 
 Prefer the [NAS GUI installer](nas-gui-install.md), which does not require SSH. The terminal/manual configuration path is retained below.
-This RC targets Linux NAS users comfortable with Docker and LAN configuration. Fresh networked installation is still unverified. Do not change DHCP until a single manually configured client works.
+This manual path targets Linux NAS users comfortable with Docker and LAN configuration. Fresh networked installation is still unverified. Do not change DHCP until a single manually configured client works.
 
 ## Prepare
 
@@ -19,6 +19,7 @@ Run these commands in the project directory after editing config.local.json. Ini
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 cp examples/settings.json config.local.json
+# All example addresses are fictional; replace them for your LAN.
 # Edit addresses and panel_origin before initialization; use the actual host interface.
 .venv/bin/python scripts/initialize.py --settings config.local.json --parent eth0
 docker compose config --quiet
@@ -67,11 +68,11 @@ docker compose exec controller python3 /app/dhcp.py enable --confirm-main-router
 
 The command regenerates dnsmasq configuration. Device status separately reports a valid lease and connections sampled within three minutes. A lease is configuration evidence; a core connection may be direct or a manually proxied connection. Neither proves successful proxy routing or successful browsing. In the original running environment, the user confirmed an iPad could rejoin by entering only the Wi-Fi password and browse successfully. Its private MAC changed, so the new record was explicitly enabled; this does not implement cross-MAC identity or automatic preference inheritance. Fresh installation of this generalized package remains unverified.
 
-## Updating from rc.1
+## Historical upgrade: rc.1 to rc.2
 
 Back up runtime and .env privately, fetch rc.2, then run `sh scripts/update.sh`. It builds first, stops the controller with a 30-second grace period, and recreates only the controller while leaving the core and network in place. Do not use forced container removal; SIGTERM saves traffic counters. Updates do not automatically opt in to authoritative DHCP.
 
-## Updating to rc.4 / 更新到 rc.4
+## Historical upgrade to rc.4 / 历史 rc.4 升级说明
 
 Back up runtime and .env privately, fetch rc.4, and run `sh scripts/update.sh`. The controller stops gracefully before recreation. Existing device switches, subscriptions and sampled totals remain in runtime. Missing preferences.json defaults to direct only for newly discovered devices. The new settings menu allows language, future-device defaults and password changes; no DHCP/subnet migration is performed automatically.
 

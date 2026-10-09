@@ -1,5 +1,7 @@
 # 发布候选验收
 
+This file records historical RC checks and later release evidence. For the current 0.1.0 installation steps and support limits, use the [NAS GUI guide](nas-gui-install.md) and [compatibility notes](compatibility.md). A regular release does not establish compatibility with untested hardware.
+
 版本：0.1.0。日期：2026-10-09。
 
 ## 已完成

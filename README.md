@@ -6,7 +6,7 @@ English · [🌐 简体中文](README.zh-CN.md) · [Installation guide](docs/ins
 
 Give each device a direct or smart-routing switch. See its proxy traffic, manage subscriptions, and keep everyday controls in one small web panel.
 
-After DHCP setup, clients can join Wi-Fi with automatic IP and DNS. The panel runs on your Linux NAS alongside Mihomo; both services are defined in the same Docker Compose file.
+After you complete and verify DHCP handover, clients can use automatic IP and DNS on this LAN. Existing clients may need to renew their leases or forget and rejoin Wi-Fi; joining Wi-Fi alone does not change an old gateway. The panel runs on your Linux NAS alongside Mihomo; both services are defined in the same Docker Compose file.
 
 ![Fictional device demo; no real network connected](docs/images/demo.png)
 
@@ -17,7 +17,7 @@ After DHCP setup, clients can join Wi-Fi with automatic IP and DNS. The panel ru
 - **Manage subscriptions.** Add, switch and refresh Clash/Mihomo YAML subscriptions.
 - **Choose your defaults.** A settings gear holds Chinese, English, Japanese, Spanish, French and Korean selection, the new-device default policy, admin password changes and connection details.
 - **Choose your appearance.** System, light or dark mode in Settings, remembered in your browser. Charts follow the theme.
-- **Find your devices.** DHCP, neighbor records and mDNS provide discovery and names. Optional router adapters can add device information.
+- **Find your devices.** DHCP, neighbor records and mDNS provide discovery and names. Optional router adapters require manual configuration and router credentials to add available device information; exact model names are not guaranteed.
 
 New devices default to direct access. You can change this to smart routing in Settings; existing switches stay unchanged. A changed private MAC counts as a new device and follows that default, even if its name is familiar.
 
@@ -35,13 +35,15 @@ Open http://127.0.0.1:9088/. Devices and traffic are fictional. The demo does no
 
 ## 🚀 Install through the NAS GUI
 
-Use the [browser installer](docs/nas-gui-install.md). No AI connection to the NAS, SSH, host Python or JSON editing is required.
+Use the [browser installer](docs/nas-gui-install.md). This is a guided manual installation, not a zero-configuration gateway. The GUI path avoids SSH, host Python and JSON editing, but you must configure the network, provide a compatible subscription and test the result.
 
-1. Create a NAS installation folder and import [setup.compose.yaml](setup.compose.yaml) in the Docker project interface. Edit only the folder path at the top.
+Before handover, fix the NAS management IP, confirm two unused static addresses for the core and panel, exclude them from router DHCP, and choose a future DHCP range that avoids infrastructure and static devices. The wizard detects interface information; it does not configure the router or prove an address is free.
+
+1. Create a NAS installation folder and import [setup.compose.yaml](setup.compose.yaml) in the Docker project interface. In this setup YAML, set the actual NAS folder path; change the setup port too if 9088 is occupied. Network values are entered separately in the wizard.
 2. Start setup, copy the access code from container logs and open `http://NAS-IPv4-address:9088`.
-3. Confirm interfaces, addresses, password and subscription in the wizard. Download its production Compose file.
+3. Confirm the detected interface and router; enter unused core/panel IPs, the future DHCP range, a panel password and a Clash/Mihomo YAML subscription URL in the wizard. Download its production Compose file.
 4. Stop setup, import the downloaded file and start production. Both the panel and Mihomo are included.
-5. Test one client, disable router DHCP, then enable automatic joining in panel Settings → Network & stats.
+5. Manually set one test client’s gateway/DNS to the core and verify routing. Disable main-router and other LAN DHCP services, then enable NAS DHCP in panel Settings → Network & stats. Restore automatic client IP/DNS, renew leases and verify the received gateway/DNS.
 
 The image targets x86-64 Linux NAS systems with Compose project support, wired macvlan and TUN. Existing state is never overwritten; DHCP starts OFF. See [manual installation](docs/nas-gui-install.md) for requirements and vendor path examples.
 
