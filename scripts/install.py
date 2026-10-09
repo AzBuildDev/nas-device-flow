@@ -151,15 +151,16 @@ class Wizard:
         if not self.confirm('NAS 管理地址已固定，上级网关保持主路由',
                             'NAS management IP is fixed and its gateway remains the main router'):
             raise ValueError('Fix NAS management addressing before installation')
-        self.say('\n2. 给核心和面板选择两个固定 IP。候选地址不是空闲保证。',
-                 '\n2. Choose two fixed IPs for the core and panel. Suggestions are not guaranteed free.')
+        self.say('\n2. 给核心和面板选择两个固定 IP。请自行输入在路由器和固定设备配置中确认未用的地址。',
+                 '\n2. Choose two fixed IPs for the core and panel. Enter addresses confirmed unused in router and static-device settings.')
         self.say('请先在主路由 DHCP 地址池中排除这两个 IP。ARP 无法发现关机设备。',
                  'Exclude these IPs from the router DHCP pool. ARP cannot detect powered-off devices.')
+        self.say('核心 IP 用作客户端网关和 DNS；面板 IP 用于网页管理，安装后从另一台局域网设备访问。',
+                 'Core IP is the client gateway and DNS; panel IP is for web management, accessed from another LAN device.')
         reserved = known | {gateway}
-        core_hint, panel_hint = suggest_addresses(lan['subnet'], reserved)
-        core = self.ip('Mihomo 核心 IP', 'Mihomo core IP', core_hint, network, reserved,
+        core = self.ip('Mihomo 核心 IP', 'Mihomo core IP', '', network, reserved,
                        lambda ip: probe(lan['parent'], ip, known))
-        panel = self.ip('网页面板 IP', 'Panel IP', panel_hint, network, reserved | {core},
+        panel = self.ip('网页面板 IP', 'Panel IP', '', network, reserved | {core},
                         lambda ip: probe(lan['parent'], ip, known))
         if not self.confirm('已在主路由排除这两个 IP，也未给其他静态设备使用',
                             'These IPs are excluded from router DHCP and other static devices'):
@@ -180,10 +181,11 @@ class Wizard:
                 self.say('固定 IP 必须是本网段内的有效地址。', 'Static IPs must be usable addresses in this subnet.')
         infrastructure = sorted(set([lan['nas_ip'], *extras]) - {gateway, core, panel})
         excluded = set(infrastructure + [gateway, core, panel])
-        start_hint, end_hint = suggest_pool(lan['subnet'], excluded)
+        self.say('未来 DHCP 范围用于给客户端分配地址，安装时保持关闭；整个范围须避开主路由、NAS、核心、面板和固定设备。',
+                 'The future DHCP pool allocates client addresses; DHCP stays off during installation. Exclude router, NAS, core, panel and static devices from the entire range.')
         while True:
-            start = self.ip('DHCP 起始 IP', 'DHCP first IP', start_hint, network, excluded)
-            end = self.ip('DHCP 结束 IP', 'DHCP last IP', end_hint, network, excluded)
+            start = self.ip('DHCP 起始 IP', 'DHCP first IP', '', network, excluded)
+            end = self.ip('DHCP 结束 IP', 'DHCP last IP', '', network, excluded)
             config = {'subnet': lan['subnet'], 'upstream': gateway, 'core_ip': core, 'panel_ip': panel,
                       'infrastructure': infrastructure, 'panel_origin': f'http://{panel}:9080',
                       'dhcp_start': start, 'dhcp_end': end, 'dhcp_authoritative': False}

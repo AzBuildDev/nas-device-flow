@@ -1,3 +1,13 @@
+# 0.1.0
+
+- First regular release, retaining the documented Linux/x86-64, IPv4 and hardware-validation limits.
+- Add Korean to the panel language selector, browser locale detection and all 216 translated messages; six languages ship in one package. The installer remains Chinese/English.
+- Remove the Huawei fallback from device provenance. Display actual adapter sources or a generic Router label. Clear stale router metadata after adapter changes, disabling or failed synchronization, while retaining manual device names and policies.
+- Clarify NAS-management-IP installer access versus the production macvlan panel: validate the panel from another device on the same LAN.
+- Stop pre-filling suggested core/panel/DHCP addresses. Keep detected host network values and require explicit address choices, with bilingual field explanations and conflict checks.
+- Validation: 105 tests, browser Korean checks, complete CI and public image verification are required before publication.
+- Upgrade impact: no installation rerun or policy migration. GUI deployments update only the controller image reference, keeping runtime and networking. Old versions remain immutable. Other NAS fresh-LAN deployments, IPv6 and failover remain unverified or unsupported.
+
 # 0.1.0-rc.5
 
 - Add a temporary browser installer for manual NAS Docker-GUI deployment, with Chinese/English instructions and a setup access code.

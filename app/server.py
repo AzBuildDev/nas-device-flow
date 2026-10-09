@@ -210,23 +210,30 @@ def collect_stats():
         except Exception:
             STATS.failed();time.sleep(3)
 
+def merge_router_names(devices,names):
+    matched=0
+    for mac,d in devices.items():
+        for key in ('router_name','router_brand','router_type','router_model','router_source','router_seen'):
+            d.pop(key,None)
+        if mac in names:
+            d.update(names[mac]); d['router_seen']=int(time.time()); matched+=1
+    return matched
+
 def router_names():
-    client=None
     while True:
         try:
-            if client is None: client=create_client(DATA)
+            client=create_client(DATA)
             names={} if client is None else client.devices()
             with LOCK:
-                devices=load(); matched=0
-                for mac,d in devices.items():
-                    if mac in names:
-                        d.update(names[mac]); d['router_seen']=int(time.time()); matched+=1
+                devices=load(); matched=merge_router_names(devices,names)
                 save(devices)
-                ROUTER_STATUS.update(ok=True,last_sync=int(time.time()),matched=matched)
+                ROUTER_STATUS.update(ok=client is not None,configured=client is not None,last_sync=int(time.time()),matched=matched)
             delay=60
         except Exception:
             ROUTER_STATUS['ok']=False
-            client=None; delay=300
+            with LOCK:
+                devices=load(); merge_router_names(devices,{}); save(devices)
+            delay=300
         time.sleep(delay)
 
 def discovery():
@@ -256,7 +263,7 @@ def dhcp_supervisor():
         time.sleep(3)
 
 class Handler(BaseHTTPRequestHandler):
-    server_version='NASDeviceFlow/0.1.0-rc.5'
+    server_version='NASDeviceFlow/0.1.0'
     def log_message(self,*args): pass
     def send(self,status,body,ctype='application/json',cookie=None):
         data=body.encode() if isinstance(body,str) else json.dumps(body,ensure_ascii=False).encode()
@@ -277,7 +284,7 @@ class Handler(BaseHTTPRequestHandler):
         if not s: return self.send(401,{'error':'请登录'})
         if self.path=='/api/settings':
             with LOCK: preferences=load_preferences(DATA)
-            return self.send(200,{'preferences':preferences,'gateway':SETTINGS.core_ip,'upstream':SETTINGS.upstream,'panel_ip':SETTINGS.panel_ip,'subnet':SETTINGS.subnet,'routing':'China direct / other destinations via PROXY','app_version':'0.1.0-rc.5','dhcp':dhcp_status(),'csrf':s['csrf']})
+            return self.send(200,{'preferences':preferences,'gateway':SETTINGS.core_ip,'upstream':SETTINGS.upstream,'panel_ip':SETTINGS.panel_ip,'subnet':SETTINGS.subnet,'routing':'China direct / other destinations via PROXY','app_version':'0.1.0','dhcp':dhcp_status(),'csrf':s['csrf']})
         if self.path=='/api/subscriptions':
             try: return self.send(200,subscription_info())
             except Exception: return self.send(503,{'error':'订阅信息读取失败'})

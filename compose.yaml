@@ -17,7 +17,7 @@ services:
       options: {max-size: 5m, max-file: '2'}
   controller:
     stop_grace_period: 30s
-    image: ${CONTROLLER_IMAGE:-ghcr.io/azbuilddev/nas-device-flow-controller:0.1.0-rc.5}
+    image: ${CONTROLLER_IMAGE:-ghcr.io/azbuilddev/nas-device-flow-controller:0.1.0}
     build: .
     restart: unless-stopped
     cap_drop: [ALL]

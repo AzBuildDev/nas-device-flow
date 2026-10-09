@@ -19,7 +19,7 @@ class StaticText(HTMLParser):
 class LanguageTests(unittest.TestCase):
  def setUp(self):
   self.html=(APP/'index.html').read_text()
-  self.catalogs={name:json.loads(self.html.split('const '+name+'=')[1].split(';\n')[0]) for name in ('EN','JA','ES','FR')}
+  self.catalogs={name:json.loads(self.html.split('const '+name+'=')[1].split(';\n')[0]) for name in ('EN','JA','ES','FR','KO')}
   self.en=self.catalogs['EN']
  def test_every_static_control_and_help_text_has_english(self):
   page=StaticText();page.feed(self.html)
@@ -33,7 +33,7 @@ class LanguageTests(unittest.TestCase):
     for key,value in catalog.items():
      self.assertTrue(value.strip(),(name,key))
      self.assertEqual(re.findall(r'\{\{[^}]+\}\}',key),re.findall(r'\{\{[^}]+\}\}',value),(name,key))
-     if name in ('ES','FR'):
+     if name in ('ES','FR','KO'):
       self.assertFalse(re.search('[\u4e00-\u9fff]',value),(name,key))
  def test_dynamic_translated_literals_and_server_errors_are_covered(self):
   script=self.html.split('function text(')[1]
@@ -42,6 +42,9 @@ class LanguageTests(unittest.TestCase):
   self.assertFalse((keys|errors)-self.en.keys())
   demo_errors=set(re.findall(r"\{'error':'([^']+)'",(APP.parent/'scripts/demo.py').read_text()))
   self.assertFalse(demo_errors-self.en.keys())
+ def test_router_source_has_no_huawei_fallback(self):
+  self.assertNotIn("x.router_source||t('华为')",self.html)
+  self.assertIn("t(x.router_source)||t('路由器')",self.html)
  def test_language_and_new_device_policy_are_distinct_controls(self):
   self.assertIn('id="language"',self.html);self.assertIn('id="defaultpolicy"',self.html)
   self.assertIn("localStorage.setItem('ndf-language'",self.html)
@@ -56,7 +59,7 @@ class LanguageTests(unittest.TestCase):
   self.assertEqual(result.returncode,0,result.stderr)
  def test_browser_region_variants_and_fallback(self):
   self.run_language_script("""
-for(const [locale,expected] of [['ja-JP','ja'],['es-MX','es'],['es-ES','es'],['fr-CA','fr'],['fr-FR','fr'],['zh-TW','zh-CN'],['en-GB','en'],['de-DE','en']])assert.equal(resolveLanguage('auto',[locale]),expected);
+for(const [locale,expected] of [['ko-KR','ko'],['ko','ko'],['ja-JP','ja'],['es-MX','es'],['es-ES','es'],['fr-CA','fr'],['fr-FR','fr'],['zh-TW','zh-CN'],['en-GB','en'],['de-DE','en']])assert.equal(resolveLanguage('auto',[locale]),expected);
 assert.equal(resolveLanguage('auto',['de-DE','ja-JP','en']), 'ja');
 assert.equal(resolveLanguage('auto',[]),'en');
 assert.equal(resolveLanguage('invalid',['fr-FR']),'fr');
@@ -65,7 +68,7 @@ navigator.languages=[];navigator.language='es-AR';assert.equal(currentLanguage()
 """)
  def test_switch_back_and_forth_and_translate_dynamic_errors(self):
   self.run_language_script("""
-for(const language of ['ja','es','fr','en','zh-CN','ja']){
+for(const language of ['ko','ja','es','fr','en','zh-CN','ko']){
  languagePreference=language;
  const expected=language==='zh-CN'?'设置':CATALOGS[language]['设置'];
  assert.equal(t('设置'),expected);
@@ -75,7 +78,7 @@ for(const language of ['ja','es','fr','en','zh-CN','ja']){
  assert.equal(t('设备同步失败：timeout'),language==='zh-CN'?'设备同步失败：timeout':CATALOGS[language]['设备同步失败：']+'timeout');
  assert.ok(!t('密码不正确').includes('密码')||language==='zh-CN');
 }
-for(const [language,label]of [['ja','日本語'],['es','Español'],['fr','Français']])assert.ok("""+json.dumps(self.html.split('<select id="language">')[1].split('</select>')[0])+""".includes('value="'+language+'">'+label));
+for(const [language,label]of [['ko','한국어'],['ja','日本語'],['es','Español'],['fr','Français']])assert.ok("""+json.dumps(self.html.split('<select id="language">')[1].split('</select>')[0])+""".includes('value="'+language+'">'+label));
 """)
 
 if __name__=='__main__':unittest.main()

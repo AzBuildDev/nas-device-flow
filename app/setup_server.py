@@ -14,7 +14,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 import yaml
-from install import Settings, address_available, ip_json, occupied_addresses, suggest_addresses, suggest_pool, usable_lans
+from install import Settings, address_available, ip_json, occupied_addresses, usable_lans
 from initialize import bootstrap
 from subscriptions import validate_url
 
@@ -38,10 +38,6 @@ def snapshot():
 
 def public_detection():
     addresses, lans, known = snapshot()
-    for lan in lans:
-        reserved = known | {lan['upstream']}
-        lan['core_hint'], lan['panel_hint'] = suggest_addresses(lan['subnet'], reserved)
-        lan['dhcp_start'], lan['dhcp_end'] = suggest_pool(lan['subnet'], reserved | {lan['core_hint'], lan['panel_hint']})
     installed = None
     if (PROJECT / 'deployment.compose.yaml').exists():
         config = json.loads((PROJECT / 'runtime/control-center/settings.json').read_text())
@@ -100,7 +96,7 @@ def deployment_compose(config, parent, template=None, folder=None):
     compose = yaml.safe_load(Path(template).read_text())
     services = compose['services']
     services['controller'].pop('build', None)
-    services['controller']['image'] = 'ghcr.io/azbuilddev/nas-device-flow-controller:0.1.0-rc.5'
+    services['controller']['image'] = 'ghcr.io/azbuilddev/nas-device-flow-controller:0.1.0'
     # Use the release's pinned core image; do not carry ${...} into a GUI import.
     services['mihomo']['image'] = services['mihomo']['image'].split(':-', 1)[1].removesuffix('}')
     for name, address, target in (('mihomo', config['core_ip'], '/root/.config/mihomo'),
@@ -142,7 +138,7 @@ def allowed_hosts():
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = 'NASDeviceFlowSetup/0.1.0-rc.5'
+    server_version = 'NASDeviceFlowSetup/0.1.0'
 
     def setup(self):
         super().setup()

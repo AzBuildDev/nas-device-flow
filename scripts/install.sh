@@ -33,7 +33,7 @@ endpoint=${DOCKER_HOST:-$(docker context inspect --format '{{.Endpoints.docker.H
 case "$endpoint" in unix://*) ;; *) fail '请在 NAS 本机运行；安装不支持远程 Docker context。' 'Run on the NAS itself; remote Docker contexts are not supported.' ;; esac
 case "$(docker info --format '{{json .SecurityOptions}}')" in *rootless*) fail 'macvlan 需要普通 Docker，不能使用 rootless 模式。' 'macvlan needs rootful Docker, not rootless mode.' ;; esac
 [ -c /dev/net/tun ] || fail '缺少 /dev/net/tun，请在 NAS 上启用 TUN 支持。' 'Missing /dev/net/tun. Enable NAS TUN support.'
-image=ghcr.io/azbuilddev/nas-device-flow-controller:0.1.0-rc.5
+image=ghcr.io/azbuilddev/nas-device-flow-controller:0.1.0
 start() {
     [ -f .env ] && [ -d runtime ] || fail '尚未初始化，请先运行安装向导。' 'Not initialized. Run the installer first.'
     docker compose config --quiet || fail 'Compose 配置无效，请检查 .env。' 'Invalid Compose configuration. Check .env.'

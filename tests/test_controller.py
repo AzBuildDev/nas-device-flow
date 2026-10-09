@@ -9,6 +9,12 @@ class PolicyTests(unittest.TestCase):
  def setUp(self):
   self.settings_patch=patch.object(c,'SETTINGS',c.Settings(subnet='192.168.50.0/24',infrastructure=['192.168.50.10']));self.settings_patch.start();self.addCleanup(self.settings_patch.stop)
   self.base={'rules':['RULE-SET,cn-domain,DIRECT','MATCH,PROXY'],'dns':{'nameserver':['old']}}
+ def test_router_source_switch_clears_stale_metadata_and_preserves_policy(self):
+  ds={'aa':{'router_name':'old','router_source':'华为','router_seen':1,'name':'mine','enabled':True,'ip':'192.168.50.101'}}
+  self.assertEqual(c.merge_router_names(ds,{'aa':{'router_name':'new','router_source':'OpenWrt'}}),1)
+  self.assertEqual(ds['aa']['router_source'],'OpenWrt');self.assertEqual(ds['aa']['name'],'mine');self.assertTrue(ds['aa']['enabled'])
+  c.merge_router_names(ds,{})
+  self.assertNotIn('router_source',ds['aa']);self.assertNotIn('router_seen',ds['aa']);self.assertEqual(ds['aa']['ip'],'192.168.50.101')
  def test_unknown_devices_default_direct(self):
   r=c.render(self.base,{});self.assertEqual(r['rules'],['MATCH,DIRECT'])
  def test_only_enabled_devices_enter_smart_rules(self):

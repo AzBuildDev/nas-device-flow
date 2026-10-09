@@ -4,7 +4,7 @@ x-project-path: &project-path /volume1/docker/nas-device-flow
 name: nas-device-flow-setup
 services:
   setup:
-    image: ghcr.io/azbuilddev/nas-device-flow-controller:0.1.0-rc.5
+    image: ghcr.io/azbuilddev/nas-device-flow-controller:0.1.0
     network_mode: host
     restart: "no"
     cap_drop: [ALL]

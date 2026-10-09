@@ -2,7 +2,7 @@
 
 ## Language
 
-One package supports Chinese, English, Japanese, Spanish and French. The gear is accessible before login, so the login screen can be translated too. The initial selection follows the browser; manual selection of any of the five languages or automatic choice is remembered in that browser. It does not change other users' language or routing/DNS.
+One package supports Chinese, English, Japanese, Spanish, French and Korean. The gear is accessible before login, so the login screen can be translated too. The initial selection follows the browser; manual selection of any of the six languages or automatic choice is remembered in that browser. It does not change other users' language or routing/DNS.
 
 ## Appearance / 外观
 
@@ -32,4 +32,6 @@ The about tab shows panel/core versions, gateway, upstream, subnet, DHCP state a
 
 改密需当前密码与新密码确认，成功后全部会话退出，核心密钥不变。只读网络信息帮助排查；普通设置不能更改 DHCP 或网段。更改语言不会自动适配其他地区的分流/DNS。
 
-Automatic selection checks browser language preferences in order, including regional variants such as ja-JP, es-MX and fr-CA, and falls back to English if no language is supported. Device names and user content keep their original text.
+Automatic selection checks browser language preferences in order, including regional variants such as ja-JP, es-MX and fr-CA and ko-KR, and falls back to English if no language is supported. Device names and user content keep their original text.
+
+Device name sources follow the configured adapter (Huawei, OpenWrt or MikroTik). Missing provenance uses a generic Router label; changing or disabling an adapter clears stale router-only metadata without altering manual device names or routing policies. Adapters are optional and are not automatically identified from the router brand.

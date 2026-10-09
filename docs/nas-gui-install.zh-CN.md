@@ -38,7 +38,7 @@ x-project-path: &project-path /volume1/docker/nas-device-flow
 
 ![虚构网络的安装向导](images/setup-demo.png)
 
-选择有线、聚合或桥接接口。向导读取实际网段、NAS 地址及默认网关，提供两个候选 IP 和将来的 DHCP 地址池。
+选择有线、聚合或桥接接口。向导读取实际网段、NAS 地址及默认网关，核心 IP、面板 IP 和将来的 DHCP 地址池留空，由你根据路由器配置确认后填写。
 
 核对以下内容：
 
@@ -91,3 +91,13 @@ x-project-path: &project-path /volume1/docker/nas-device-flow
 | 面板能打开但开关不控制设备 | 客户端实际网关/DNS、旧 DHCP 租约、VPN/系统代理及 IPv6 |
 
 已验证情况见[发布验收](release-readiness.md)。绿联之外的 NAS 尚未完成实机手动安装验收。
+
+## Installer versus production panel / 安装入口与正式面板
+
+The installer uses the NAS management IPv4 address and port 9088, and reads interfaces from the NAS container host. The production panel uses its own macvlan IP. Test that panel from another device on the same LAN: NAS-host-to-macvlan communication is restricted, so a failure from the NAS browser does not establish a failure from other clients. Do not change the NAS gateway to work around this. Suggested addresses are not proof that they are unused.
+
+安装向导通过 NAS 管理 IP 的 9088 端口访问，从 NAS 宿主网络读取接口。正式面板使用独立的 macvlan IP，应在同一局域网的另一台设备上验证；NAS 宿主机访问 macvlan 受限制，宿主浏览器访问失败不等于其他设备访问失败，不要为此更改 NAS 网关。ARP 无响应也不是地址空闲保证。
+
+Only interface, NAS IP, subnet and upstream gateway are detected. Core and panel are two distinct, confirmed-unused static addresses; the future DHCP range allocates client addresses and must exclude all infrastructure and static assignments. No working default IP is promised. The browser and terminal installers require these addresses explicitly.
+
+仅接口、NAS IP、网段与上级网关来自检测。核心与面板是两个不同且经确认未占用的固定地址；未来 DHCP 范围用于分配客户端地址，必须避开基础设施和固定地址。浏览器与终端安装均要求明确填写，不再提供看似可用的默认地址。

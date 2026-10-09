@@ -64,7 +64,7 @@ class DiscoveryTests(unittest.TestCase):
                 self.assertIn('-D', run.call_args.args[0])
 
     def test_terminal_collect_invalid_selection_and_pool_retry(self):
-        replies = iter(['bad', '1', '', 'y', '', '', 'y', '', '192.168.50.9', '192.168.50.11', '', ''])
+        replies = iter(['bad', '1', '', 'y', '192.168.50.254', '192.168.50.253', 'y', '', '192.168.50.9', '192.168.50.11', '192.168.50.180', '192.168.50.249'])
         w = wizard.Wizard('en', ask=lambda _: next(replies), output=lambda _: None)
         config, parent = w.collect([LAN], {'192.168.50.10'}, probe=lambda *args: True)
         self.assertEqual(parent, 'bond0')
@@ -122,6 +122,14 @@ class NetworkValidationTests(unittest.TestCase):
         self.patch = patch.object(setup, 'snapshot', return_value=(ADDRESSES, [LAN], {'192.168.50.10'}))
         self.patch.start()
         self.addCleanup(self.patch.stop)
+
+    def test_detection_reports_host_facts_without_suggested_addresses(self):
+        with tempfile.TemporaryDirectory() as folder, patch.object(setup, 'PROJECT', Path(folder)):
+            result = setup.public_detection()
+        self.assertEqual(result['lans'][0]['nas_ip'], LAN['nas_ip'])
+        self.assertEqual(result['lans'][0]['upstream'], LAN['upstream'])
+        for key in ('core_hint', 'panel_hint', 'dhcp_start', 'dhcp_end'):
+            self.assertNotIn(key, result['lans'][0])
 
     def test_conflict_requires_new_address_and_probe_error_requires_confirmation(self):
         with self.assertRaisesRegex(ValueError, 'address_conflict'):
