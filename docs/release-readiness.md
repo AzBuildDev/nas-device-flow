@@ -1,8 +1,8 @@
 # 发布候选验收
 
-This file records historical RC checks and later release evidence. For the current 0.1.0 installation steps and support limits, use the [NAS GUI guide](nas-gui-install.md) and [compatibility notes](compatibility.md). A regular release does not establish compatibility with untested hardware.
+This file records historical RC checks and later release evidence. For the current 0.2.0 installation steps and support limits, use the [NAS GUI guide](nas-gui-install.md) and [compatibility notes](compatibility.md). A regular release does not establish compatibility with untested hardware.
 
-版本：0.1.0。日期：2026-10-09。
+版本：0.2.0。日期：2026-10-13。
 
 ## 已完成
 
@@ -61,3 +61,11 @@ rc.4 创建独立 tag、GitHub prerelease 和源码包、SHA256 manifest，不�
 ## v0.1.0 正式发布
 
 新增韩语面板与实际来源标识修复，六语同包；安装向导仍为中英文。105 项测试、最终 CI、镜像与安装附件 SHA256 必须通过。正式发布不扩展已验收硬件范围，不意味着其他 NAS 的干净 LAN 已实测。部署访问说明已区分 NAS 管理地址安装入口与其他 LAN 客户端访问正式 macvlan 面板。
+
+## v0.2.0 订阅用途分流
+
+119 项本地源码测试通过，覆盖独立订阅缓存与节点名称、规则优先级、设备白名单、OFF/基础设施直连、保存/清除、删除保护、失败回退、认证/CSRF 以及双 provider 更新。六语前端检查与 JavaScript 语法检查通过。已安装 Mihomo v1.19.32 在无网络隔离容器验证空专用组使用 REJECT。
+
+原 NAS 环境已部署兼容更新，浏览器确认专用订阅与常用订阅分别显示；核心与 DHCP 在线。原 LAN 上实际新请求验证 ChatGPT/OpenAI 为美国出口、普通国外站点为泰国出口。规则适用于所有已开启设备，但本次出口实测使用 Mac，不将其描述为每种客户端均已测试。现场截图和真实订阅未加入公开仓库。控制器重建曾因双网络处理失败短暂中断，已恢复并修正；核心未停止。
+
+完整 CI 与镜像发布由对应 Actions 和新版本 Release 提供证据；本地结果不代替该记录。原有硬件、干净 LAN、IPv6 和故障切换的验证范围保持不变。

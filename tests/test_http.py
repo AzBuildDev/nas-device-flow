@@ -105,4 +105,28 @@ class HTTPTests(unittest.TestCase):
    status,_,body=self.request('/api/settings',headers=auth)
   self.assertEqual(status,200)
   self.assertEqual(json.loads(body)['dhcp'],{'requested':True,'running':False,'authoritative':False})
+ def test_openai_subscription_assignment_requires_auth_csrf_and_valid_saved_id(self):
+  from subscriptions import Subscriptions
+  (c.DATA/'base.yaml').write_text('proxy-providers:\n  subscription:\n    url: https://example.invalid/default.yaml\n')
+  registry=Subscriptions(c.DATA,c.atomic);registry.add('US demo','https://example.invalid/us.yaml');identifier=registry.load()['items'][1]['id']
+  payload={'action':'set-openai','id':identifier};auth=self.auth()
+  self.assertEqual(self.request('/api/subscriptions',payload)[0],401)
+  self.assertEqual(self.request('/api/subscriptions',payload,{'Cookie':auth['Cookie']})[0],403)
+  with patch.object(c,'subscription_apply') as apply:
+   self.assertEqual(self.request('/api/subscriptions',{'action':'set-openai','id':'missing'},auth)[0],400)
+   apply.assert_not_called()
+   self.assertEqual(self.request('/api/subscriptions',payload,auth)[0],200)
+   apply.assert_called_once()
+  self.assertEqual(registry.summaries()['openai_subscription'],identifier)
+  self.assertEqual(registry.summaries()['active'],'original')
+  with patch.object(c,'core',side_effect=OSError('fixture')):
+   status,_,result=self.request('/api/subscriptions',headers=auth)
+  self.assertEqual(status,200);self.assertNotIn(b'us.yaml',result);self.assertTrue(json.loads(result)['openai']['enabled'])
+ def test_refresh_updates_both_assigned_subscriptions(self):
+  from subscriptions import Subscriptions
+  (c.DATA/'base.yaml').write_text('proxy-providers:\n  subscription:\n    url: https://example.invalid/default.yaml\n')
+  registry=Subscriptions(c.DATA,c.atomic);registry.set_openai('original',lambda:None)
+  with patch.object(c,'core') as core,patch.object(c,'subscription_apply'):
+   self.assertEqual(self.request('/api/subscriptions',{'action':'refresh'},self.auth())[0],200)
+   self.assertEqual([call.args for call in core.call_args_list],[('/providers/proxies/subscription','PUT'),('/providers/proxies/ndf-openai','PUT')])
 if __name__=='__main__':unittest.main()

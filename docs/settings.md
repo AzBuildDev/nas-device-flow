@@ -35,3 +35,9 @@ The about tab shows panel/core versions, gateway, upstream, subnet, DHCP state a
 Automatic selection checks browser language preferences in order, including regional variants such as ja-JP, es-MX and fr-CA and ko-KR, and falls back to English if no language is supported. Device names and user content keep their original text.
 
 Device name sources follow the configured adapter (Huawei, OpenWrt or MikroTik). Missing provenance uses a generic Router label; changing or disabling an adapter clears stale router-only metadata without altering manual device names or routing policies. Adapters are optional and are not automatically identified from the router brand.
+
+## Subscription purpose / 订阅用途
+
+Subscriptions & nodes now offers an optional OpenAI subscription independent of the usual subscription. It applies to all enabled devices; selecting it does not enable any device automatically. Both provider statuses are shown separately. See [service routing](service-routing.md) for setup, domain scope, clearing the assignment and upgrade instructions.
+
+「订阅与节点设置」提供独立的 OpenAI 专用订阅，作用于已开启智能分流的设备，不会自动开启设备开关。常用订阅与专用订阅分别显示节点状态；详见[用途分流说明](service-routing.md#中文操作)。

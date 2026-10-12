@@ -2,6 +2,7 @@
 import copy,hashlib,json,secrets,time
 from urllib.parse import urlsplit
 import yaml
+from service_routing import binding_id
 
 def validate_url(value):
     if not isinstance(value,str) or len(value)>2048: raise ValueError('订阅链接过长')
@@ -21,7 +22,7 @@ class Subscriptions:
     def save(self,value):self.atomic(self.directory/'subscriptions.json',json.dumps(value,ensure_ascii=False,indent=2))
     def summaries(self):
         value=self.load()
-        return {'active':value['active'],'items':[{'id':x['id'],'name':x['name'],'host':urlsplit(x['url']).hostname,'created':x['created']} for x in value['items']]}
+        return {'active':value['active'],'openai_subscription':binding_id(value),'items':[{'id':x['id'],'name':x['name'],'host':urlsplit(x['url']).hostname,'created':x['created']} for x in value['items']]}
     def add(self,name,url):
         if not isinstance(name,str) or not 1<=len(name.strip())<=60:raise ValueError('名称需要 1–60 个字符')
         validate_url(url);value=self.load()
@@ -31,8 +32,22 @@ class Subscriptions:
     def remove(self,identifier):
         value=self.load()
         if identifier==value['active']:raise ValueError('请先切换到其他订阅，再删除当前订阅')
+        if identifier==binding_id(value):raise ValueError('请先取消 OpenAI 用途，再删除这个订阅')
         if not any(x['id']==identifier for x in value['items']):raise ValueError('订阅不存在')
         value['items']=[x for x in value['items'] if x['id']!=identifier];self.save(value)
+    def set_openai(self,identifier,apply):
+        value=self.load()
+        if not isinstance(identifier,str) or (identifier and not any(x['id']==identifier for x in value['items'])):
+            raise ValueError('OpenAI 专用订阅不存在')
+        old=copy.deepcopy(value)
+        value['openai_subscription']=identifier
+        try:
+            self.save(value);apply()
+        except Exception:
+            self.save(old)
+            try:apply()
+            except Exception:raise RuntimeError('OpenAI 设置失败，原配置恢复未确认，请检查核心状态') from None
+            raise RuntimeError('OpenAI 设置失败，已恢复原配置；请检查订阅或核心连接') from None
     def switch(self,identifier,apply):
         value=self.load();item=next((x for x in value['items'] if x['id']==identifier),None)
         if not item:raise ValueError('订阅不存在')

@@ -1,3 +1,13 @@
+# 0.2.0
+
+- Use two saved subscriptions together: an optional OpenAI subscription for first-party OpenAI/ChatGPT/Codex domains, and the usual subscription for other proxy traffic.
+- Keep service rules inside the enabled-device whitelist. OFF devices and infrastructure remain direct; existing domestic rules stay in place.
+- Add a subscription-purpose selector and separate OpenAI node status in all six panel languages, within the existing collapsed subscription section.
+- Persist assignments across restarts and usual-subscription changes. Refresh both providers, protect referenced subscriptions from deletion, and restore previous configuration on failed changes.
+- Isolate node names and provider caches. The dedicated group has no usual-provider fallback and uses REJECT when empty.
+- Validation: 119 local source tests, JavaScript syntax and live browser checks pass. Installed Mihomo v1.19.32 passed an isolated empty-group REJECT check; original LAN requests returned US for OpenAI and Thailand for ordinary foreign traffic. Final container/CI checks are recorded separately.
+- Upgrade impact: update the controller image while preserving mounts/networks; no setup rerun. Dedicated routing is opt-in, with existing device policies and DHCP retained. Domain matching does not identify application processes or cover every third-party/pure-IP endpoint. Hardware and IPv4 support limits are unchanged.
+
 # 0.1.0
 
 - First regular release, retaining the documented Linux/x86-64, IPv4 and hardware-validation limits.

@@ -12,6 +12,7 @@ from router_adapters import create_client
 from traffic_stats import TrafficStats
 from device_traffic import DeviceTraffic, proxy_nodes, ip_owners
 from subscriptions import Subscriptions
+from service_routing import compile_openai, read_registry, validate_openai_core, OPENAI_PROVIDER, OPENAI_GROUP
 from urllib.parse import quote
 from settings import Settings
 from access_status import AccessStatus, valid_leases
@@ -65,10 +66,10 @@ def load():
 def save(devices): atomic(DATA/'devices.json',json.dumps(devices,ensure_ascii=False,indent=2))
 
 def render(base,devices):
-    result=copy.deepcopy(base)
+    result=compile_openai(base,read_registry(DATA),SETTINGS.provider)
     # Only enabled devices enter domestic/foreign routing. Everything else is DIRECT.
     ips=sorted({d['ip'] for d in devices.values() if d.get('enabled') and valid_ip(d.get('ip'))})
-    result['sub-rules']={'smart-routing':base['rules']}
+    result['sub-rules']={'smart-routing':result['rules']}
     result['rules']=['SUB-RULE,(SRC-IP-CIDR,'+ip+'/32),smart-routing' for ip in ips]+['MATCH,DIRECT']
     # All clients use direct domestic DoH for DNS; only enabled clients' traffic uses proxy.
     result.setdefault('dns',{})['nameserver']=SETTINGS.direct_dns
@@ -105,6 +106,7 @@ def apply(devices, force=False):
         expected=sum(1 for d in devices.values() if d.get('enabled') and valid_ip(d.get('ip')))
         if not rules or rules[-1]['type']!='Match' or rules[-1]['proxy']!='DIRECT': raise RuntimeError('规则验收失败')
         if sum(r['type']=='SubRules' for r in rules)!=expected: raise RuntimeError('设备规则数量不符：'+str([(r['type'],r['proxy']) for r in rules]))
+        validate_openai_core(core,read_registry(DATA))
     except Exception:
         atomic(ROOT/'config.yaml',old)
         try: core('/configs?force=true','PUT',{'path':SETTINGS.core_config_path})
@@ -187,6 +189,14 @@ def subscription_info():
         if isinstance(usage,dict): usage={k:usage[k] for k in ('Upload','Download','Total','Expire') if isinstance(usage.get(k),(int,float))}
         result.update(available=True,node=selected,node_count=len(provider.get('proxies') or []),updated=provider.get('updatedAt',''),usage=usage)
     except Exception: pass
+    result['openai']={'enabled':bool(result['openai_subscription']),'available':False,'node':'','node_count':0}
+    if result['openai_subscription']:
+        try:
+            provider=core('/providers/proxies/'+OPENAI_PROVIDER)
+            selected=core('/proxies/'+OPENAI_GROUP).get('now','')
+            nodes=provider.get('proxies') or []
+            result['openai'].update(available=selected in {x.get('name') for x in nodes},node=selected,node_count=len(nodes))
+        except Exception:pass
     return result
 
 def collect_stats():
@@ -263,7 +273,7 @@ def dhcp_supervisor():
         time.sleep(3)
 
 class Handler(BaseHTTPRequestHandler):
-    server_version='NASDeviceFlow/0.1.0'
+    server_version='NASDeviceFlow/0.2.0'
     def log_message(self,*args): pass
     def send(self,status,body,ctype='application/json',cookie=None):
         data=body.encode() if isinstance(body,str) else json.dumps(body,ensure_ascii=False).encode()
@@ -284,7 +294,7 @@ class Handler(BaseHTTPRequestHandler):
         if not s: return self.send(401,{'error':'请登录'})
         if self.path=='/api/settings':
             with LOCK: preferences=load_preferences(DATA)
-            return self.send(200,{'preferences':preferences,'gateway':SETTINGS.core_ip,'upstream':SETTINGS.upstream,'panel_ip':SETTINGS.panel_ip,'subnet':SETTINGS.subnet,'routing':'China direct / other destinations via PROXY','app_version':'0.1.0','dhcp':dhcp_status(),'csrf':s['csrf']})
+            return self.send(200,{'preferences':preferences,'gateway':SETTINGS.core_ip,'upstream':SETTINGS.upstream,'panel_ip':SETTINGS.panel_ip,'subnet':SETTINGS.subnet,'routing':'China direct / other destinations via PROXY','app_version':'0.2.0','dhcp':dhcp_status(),'csrf':s['csrf']})
         if self.path=='/api/subscriptions':
             try: return self.send(200,subscription_info())
             except Exception: return self.send(503,{'error':'订阅信息读取失败'})
@@ -378,8 +388,11 @@ class Handler(BaseHTTPRequestHandler):
                     if action=='add': registry.add(body.get('name'),body.get('url'))
                     elif action=='remove': registry.remove(body.get('id'))
                     elif action=='switch': registry.switch(body.get('id'),subscription_apply)
+                    elif action=='set-openai': registry.set_openai(body.get('id'),subscription_apply)
                     elif action=='refresh':
-                        core('/providers/proxies/'+quote(SETTINGS.provider,safe=''),'PUT');subscription_apply()
+                        core('/providers/proxies/'+quote(SETTINGS.provider,safe=''),'PUT')
+                        if registry.summaries()['openai_subscription']:core('/providers/proxies/'+OPENAI_PROVIDER,'PUT')
+                        subscription_apply()
                     else: raise ValueError('未知订阅操作')
                 except ValueError as e: return self.send(400,{'error':str(e)})
                 except RuntimeError as e: return self.send(503,{'error':str(e)})

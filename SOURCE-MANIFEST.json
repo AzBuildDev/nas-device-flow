@@ -1,6 +1,6 @@
 {
   "project": "nas-device-flow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "own_source_files": [
     "app/server.py",
     "app/device_names.py",
@@ -35,6 +35,8 @@
     "scripts/install.sh",
     "scripts/setup_demo.py",
     "setup.compose.yaml",
-    "tests/test_installer.py"
+    "tests/test_installer.py",
+    "app/service_routing.py",
+    "tests/test_service_routing.py"
   ]
 }
