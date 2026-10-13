@@ -17,7 +17,7 @@ class Demo(BaseHTTPRequestHandler):
    html=(Path(__file__).resolve().parents[1]/'app/index.html').read_text().replace('{{GATEWAY}}','192.168.50.250').replace('<main>','<main><p class="demobanner">演示数据 · 未连接真实网络 · 开关仅修改本地示例</p>')
    self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.end_headers();self.wfile.write(html.encode());return
   if self.path=='/api/devices':return self.send({'devices':DEVICES,'preferences':PREFERENCES,'router_sync':{'ok':False},'csrf':'demo','core_ok':True,'version':'demo','dhcp':DHCP['running'],'error':'演示模式：所有设备和流量均为虚构。','gateway':'192.168.50.250'})
-  if self.path=='/api/settings':return self.send({'preferences':PREFERENCES,'gateway':'192.168.50.250','upstream':'192.168.50.1','subnet':'192.168.50.0/24','app_version':'0.2.0','dhcp':DHCP,'csrf':'demo'})
+  if self.path=='/api/settings':return self.send({'preferences':PREFERENCES,'gateway':'192.168.50.250','upstream':'192.168.50.1','subnet':'192.168.50.0/24','app_version':'0.2.1','dhcp':DHCP,'csrf':'demo'})
   if self.path=='/api/stats':return self.send({'ok':True,'updated':now,'up':210000,'down':2800000,'upload_total':120000000,'download_total':920000000,'connections':28,'memory':64000000,'history':[{'time':now-179+i,'up':180000+100000*math.sin(i/11)**2,'down':1600000+1500000*math.sin(i/19)**2} for i in range(180)],'device_traffic':{'ok':True,'since':now-3600,'devices':{d['mac']:d['proxy_traffic'] for d in DEVICES}}})
   if self.path=='/api/subscriptions':return self.send(SUBSCRIPTIONS)
   self.send({'error':'演示接口不存在'},404)
@@ -36,6 +36,10 @@ class Demo(BaseHTTPRequestHandler):
     SUBSCRIPTIONS['openai']['node']='OpenAI | '+('US demo node' if identifier=='us-demo' else 'Bangkok demo node')
    elif action=='switch' and identifier in known:
     SUBSCRIPTIONS['active']=identifier;SUBSCRIPTIONS['node']='US demo node' if identifier=='us-demo' else 'Bangkok demo node'
+   elif action=='rename' and identifier in known:
+    name=body.get('name')
+    if not isinstance(name,str) or not 1<=len(name.strip())<=60:return self.send({'error':'名称需要 1–60 个字符'},400)
+    next(x for x in SUBSCRIPTIONS['items'] if x['id']==identifier)['name']=name.strip()
    elif action!='refresh':return self.send({'error':'演示模式不保存订阅或认证配置'},400)
    return self.send({'ok':True})
   if self.path=='/api/dhcp':

@@ -273,7 +273,7 @@ def dhcp_supervisor():
         time.sleep(3)
 
 class Handler(BaseHTTPRequestHandler):
-    server_version='NASDeviceFlow/0.2.0'
+    server_version='NASDeviceFlow/0.2.1'
     def log_message(self,*args): pass
     def send(self,status,body,ctype='application/json',cookie=None):
         data=body.encode() if isinstance(body,str) else json.dumps(body,ensure_ascii=False).encode()
@@ -294,7 +294,7 @@ class Handler(BaseHTTPRequestHandler):
         if not s: return self.send(401,{'error':'请登录'})
         if self.path=='/api/settings':
             with LOCK: preferences=load_preferences(DATA)
-            return self.send(200,{'preferences':preferences,'gateway':SETTINGS.core_ip,'upstream':SETTINGS.upstream,'panel_ip':SETTINGS.panel_ip,'subnet':SETTINGS.subnet,'routing':'China direct / other destinations via PROXY','app_version':'0.2.0','dhcp':dhcp_status(),'csrf':s['csrf']})
+            return self.send(200,{'preferences':preferences,'gateway':SETTINGS.core_ip,'upstream':SETTINGS.upstream,'panel_ip':SETTINGS.panel_ip,'subnet':SETTINGS.subnet,'routing':'China direct / other destinations via PROXY','app_version':'0.2.1','dhcp':dhcp_status(),'csrf':s['csrf']})
         if self.path=='/api/subscriptions':
             try: return self.send(200,subscription_info())
             except Exception: return self.send(503,{'error':'订阅信息读取失败'})
@@ -386,6 +386,7 @@ class Handler(BaseHTTPRequestHandler):
                 try:
                     action=body.get('action')
                     if action=='add': registry.add(body.get('name'),body.get('url'))
+                    elif action=='rename': registry.rename(body.get('id'),body.get('name'))
                     elif action=='remove': registry.remove(body.get('id'))
                     elif action=='switch': registry.switch(body.get('id'),subscription_apply)
                     elif action=='set-openai': registry.set_openai(body.get('id'),subscription_apply)

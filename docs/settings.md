@@ -41,3 +41,9 @@ Device name sources follow the configured adapter (Huawei, OpenWrt or MikroTik).
 Subscriptions & nodes now offers an optional OpenAI subscription independent of the usual subscription. It applies to all enabled devices; selecting it does not enable any device automatically. Both provider statuses are shown separately. See [service routing](service-routing.md) for setup, domain scope, clearing the assignment and upgrade instructions.
 
 「订阅与节点设置」提供独立的 OpenAI 专用订阅，作用于已开启智能分流的设备，不会自动开启设备开关。常用订阅与专用订阅分别显示节点状态；详见[用途分流说明](service-routing.md#中文操作)。
+
+## Rename a subscription / 订阅重命名
+
+Open Subscriptions & nodes, choose Rename beside any subscription, edit its name and Save. Cancel or Escape discards the edit. Names are trimmed and limited to 1–60 characters. The list pauses automatic refresh while you type. Default and OpenAI-assigned subscriptions can also be renamed; the selection is stored by ID, so the change does not reload the core or change routing, credentials or the subscription URL.
+
+打开「订阅与节点设置」，点击对应订阅的「重命名」，输入名称并「保存」。点击「取消」或按 Esc 放弃修改。名称去除首尾空白后需为 1–60 个字符；编辑时自动刷新暂停。常用和 OpenAI 专用订阅也能改名，选择按 ID 保存，改名不会重载核心或修改分流、凭据和订阅链接。

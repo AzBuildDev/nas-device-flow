@@ -29,7 +29,7 @@ Dedicated rules run before domestic/default rules, inside the existing enabled-d
 
 ## Upgrade
 
-Update the controller image to `ghcr.io/azbuilddev/nas-device-flow-controller:0.2.0` while retaining your runtime mounts and networks. Do not rerun setup. Existing deployments keep their single-subscription behavior until an administrator assigns an OpenAI subscription. Device switches, DHCP settings and stored credentials remain in the existing private runtime.
+Update the controller image to `ghcr.io/azbuilddev/nas-device-flow-controller:0.2.1` while retaining your runtime mounts and networks. Do not rerun setup. Existing deployments keep their single-subscription behavior until an administrator assigns an OpenAI subscription. Device switches, DHCP settings and stored credentials remain in the existing private runtime.
 
 ## 中文操作
 

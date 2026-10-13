@@ -129,4 +129,20 @@ class HTTPTests(unittest.TestCase):
   with patch.object(c,'core') as core,patch.object(c,'subscription_apply'):
    self.assertEqual(self.request('/api/subscriptions',{'action':'refresh'},self.auth())[0],200)
    self.assertEqual([call.args for call in core.call_args_list],[('/providers/proxies/subscription','PUT'),('/providers/proxies/ndf-openai','PUT')])
+ def test_subscription_rename_auth_validation_and_no_core_reload(self):
+  from subscriptions import Subscriptions
+  (c.DATA/'base.yaml').write_text('proxy-providers:\n  subscription:\n    url: https://example.invalid/private-token\n')
+  registry=Subscriptions(c.DATA,c.atomic);registry.load()
+  payload={'action':'rename','id':'original','name':'  Personal name  '}
+  self.assertEqual(self.request('/api/subscriptions',payload)[0],401)
+  auth=self.auth()
+  self.assertEqual(self.request('/api/subscriptions',payload,{'Cookie':auth['Cookie']})[0],403)
+  with patch.object(c,'core') as core,patch.object(c,'subscription_apply') as apply:
+   self.assertEqual(self.request('/api/subscriptions',dict(payload,name='  '),auth)[0],400)
+   self.assertEqual(self.request('/api/subscriptions',dict(payload,id='missing'),auth)[0],400)
+   self.assertEqual(self.request('/api/subscriptions',payload,auth)[0],200)
+   core.assert_not_called();apply.assert_not_called()
+  self.assertEqual(registry.load()['items'][0]['name'],'Personal name')
+  self.assertEqual(registry.load()['active'],'original')
+  self.assertEqual((c.DATA/'subscriptions.json').stat().st_mode & 0o777,0o600)
 if __name__=='__main__':unittest.main()

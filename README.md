@@ -14,7 +14,7 @@ After you complete and verify DHCP handover, clients can use automatic IP and DN
 
 - **Control each device.** Choose direct access or smart routing, with preferences retained while its MAC stays the same.
 - **See network activity.** Live upload/download rates, a traffic chart, active connections and sampled proxy usage per device.
-- **Manage subscriptions.** Add, switch and refresh Clash/Mihomo YAML subscriptions. Assign a separate subscription to OpenAI/ChatGPT/Codex while other proxy traffic uses the usual one. [Service routing](docs/service-routing.md)
+- **Manage subscriptions.** Add, rename, switch and refresh Clash/Mihomo YAML subscriptions. Assign a separate subscription to OpenAI/ChatGPT/Codex while other proxy traffic uses the usual one. [Service routing](docs/service-routing.md)
 - **Choose your defaults.** A settings gear holds Chinese, English, Japanese, Spanish, French and Korean selection, the new-device default policy, admin password changes and connection details.
 - **Choose your appearance.** System, light or dark mode in Settings, remembered in your browser. Charts follow the theme.
 - **Find your devices.** DHCP, neighbor records and mDNS provide discovery and names. Optional router adapters require manual configuration and router credentials to add available device information; exact model names are not guaranteed.
@@ -53,7 +53,7 @@ macOS, Windows, phones and tablets use the browser as clients; the gateway runs 
 
 ## 🧪 Project status
 
-v0.2.0 adds optional OpenAI subscription routing, within the supported scope below. The original setup is running on a UGREEN DXP4800 with UGOS Pro, a bonded interface and a Huawei TC7102. Source tests and isolated container/DHCP checks cover the generalized package; a fresh networked installation on another LAN still needs validation. OpenWrt and MikroTik device-name adapters have mock tests only.
+v0.2.1 adds optional OpenAI subscription routing, within the supported scope below. The original setup is running on a UGREEN DXP4800 with UGOS Pro, a bonded interface and a Huawei TC7102. Source tests and isolated container/DHCP checks cover the generalized package; a fresh networked installation on another LAN still needs validation. OpenWrt and MikroTik device-name adapters have mock tests only.
 
 A switch means a policy is configured. It does not prove the client is using the NAS gateway or that a website is reachable. See [connection diagnostics](docs/diagnostics.md) and [compatibility notes](docs/compatibility.md).
 

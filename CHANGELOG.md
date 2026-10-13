@@ -1,3 +1,11 @@
+# 0.2.1
+
+- Rename any saved subscription directly in its list row, including the default and OpenAI-assigned subscriptions.
+- Add inline Save/Cancel controls, Escape cancellation and translated labels/status in all six panel languages. Automatic list refresh pauses while editing.
+- Validate trimmed names at 1–60 characters and save metadata atomically with authentication/CSRF protection. Renaming preserves IDs, URLs, assignments and provider caches, without reloading Mihomo.
+- Validation: 123 source tests; browser checks and final CI evidence are recorded in release-readiness.md.
+- Upgrade impact: update the controller image, preserve runtime mounts/networks and do not rerun setup. Existing names and routing remain unchanged until edited; hardware/IPv4 support limits are unchanged.
+
 # 0.2.0
 
 - Use two saved subscriptions together: an optional OpenAI subscription for first-party OpenAI/ChatGPT/Codex domains, and the usual subscription for other proxy traffic.

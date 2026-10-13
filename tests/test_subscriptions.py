@@ -27,3 +27,27 @@ class SubscriptionTests(unittest.TestCase):
   with self.assertRaises(ValueError):self.r.add('重复','https://example.com/private-token')
   for url in ('file:///secret','https://user:pass@example.com','https://example.com/#secret'):
    with self.assertRaises(ValueError):validate_url(url)
+
+ def test_rename_active_and_dedicated_changes_only_name(self):
+  self.r.add('US demo','https://example.invalid/us.yaml');v=self.r.load();v['openai_subscription']=v['items'][1]['id'];self.r.save(v)
+  base=(self.root/'base.yaml').read_bytes()
+  for item in v['items']:
+   before=self.r.load();expected=json.loads(json.dumps(before));next(x for x in expected['items'] if x['id']==item['id'])['name']='改名 🌐'
+   self.r.rename(item['id'],'  改名 🌐  ')
+   self.assertEqual(self.r.load(),expected)
+   self.assertEqual((self.root/'base.yaml').read_bytes(),base)
+   self.assertEqual(Subscriptions(self.root,lambda p,s:p.write_text(s)).load(),expected)
+ def test_invalid_rename_preserves_registry(self):
+  old=self.r.load()
+  for name in (None,42,'','  ','x'*61):
+   with self.assertRaises(ValueError):self.r.rename('original',name)
+   self.assertEqual(self.r.load(),old)
+  with self.assertRaisesRegex(ValueError,'订阅不存在'):self.r.rename('missing','Valid name')
+  self.assertEqual(self.r.load(),old)
+  self.r.rename('original','x'*60);self.assertEqual(len(self.r.load()['items'][0]['name']),60)
+ def test_rename_write_failure_keeps_saved_name(self):
+  old=self.r.load()
+  def fail(path,text):raise OSError('fixture write failed')
+  broken=Subscriptions(self.root,fail)
+  with self.assertRaises(OSError):broken.rename('original','New name')
+  self.assertEqual(self.r.load(),old)

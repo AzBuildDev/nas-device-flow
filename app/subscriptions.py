@@ -29,6 +29,14 @@ class Subscriptions:
         if len(value['items'])>=20:raise ValueError('最多保存 20 个订阅')
         if any(x['url']==url for x in value['items']):raise ValueError('这个订阅已经保存')
         value['items'].append({'id':secrets.token_hex(8),'name':name.strip(),'url':url,'created':int(time.time())});self.save(value)
+    def rename(self,identifier,name):
+        if not isinstance(name,str) or not 1<=len(name.strip())<=60:
+            raise ValueError('名称需要 1–60 个字符')
+        value=self.load()
+        item=next((x for x in value['items'] if x['id']==identifier),None)
+        if not item:raise ValueError('订阅不存在')
+        item['name']=name.strip()
+        self.save(value)
     def remove(self,identifier):
         value=self.load()
         if identifier==value['active']:raise ValueError('请先切换到其他订阅，再删除当前订阅')

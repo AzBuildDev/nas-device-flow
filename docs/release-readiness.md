@@ -1,8 +1,8 @@
 # 发布候选验收
 
-This file records historical RC checks and later release evidence. For the current 0.2.0 installation steps and support limits, use the [NAS GUI guide](nas-gui-install.md) and [compatibility notes](compatibility.md). A regular release does not establish compatibility with untested hardware.
+This file records historical RC checks and later release evidence. For the current 0.2.1 installation steps and support limits, use the [NAS GUI guide](nas-gui-install.md) and [compatibility notes](compatibility.md). A regular release does not establish compatibility with untested hardware.
 
-版本：0.2.0。日期：2026-10-13。
+版本：0.2.1。日期：2026-10-14。
 
 ## 已完成
 
@@ -69,3 +69,9 @@ rc.4 创建独立 tag、GitHub prerelease 和源码包、SHA256 manifest，不�
 原 NAS 环境已部署兼容更新，浏览器确认专用订阅与常用订阅分别显示；核心与 DHCP 在线。原 LAN 上实际新请求验证 ChatGPT/OpenAI 为美国出口、普通国外站点为泰国出口。规则适用于所有已开启设备，但本次出口实测使用 Mac，不将其描述为每种客户端均已测试。现场截图和真实订阅未加入公开仓库。控制器重建曾因双网络处理失败短暂中断，已恢复并修正；核心未停止。
 
 完整 CI 与镜像发布由对应 Actions 和新版本 Release 提供证据；本地结果不代替该记录。原有硬件、干净 LAN、IPv6 和故障切换的验证范围保持不变。
+
+## v0.2.1 订阅重命名
+
+123 项本地源码测试通过。新增测试覆盖常用/专用订阅改名只更新 name、绑定与 URL 保留、刷新重读持久化、名称边界、写入失败、HTTP 认证/CSRF，以及无需调用核心重载。六语字段覆盖和前端语法检查通过。浏览器、现场更新和完整 CI 结果在验证后记录，不以测试数量代替实际运行证据。
+
+浏览器虚构演示验证常用订阅改名、专用订阅改名后选择同步、空白名称拒绝和取消。原 NAS 已更新兼容控制器0.2.1，保留原双 Docker 网络、IP/MAC、runtime 挂载和限制；升级前后私有注册表与既有设备策略逐项核对相同。面板确认核心与 DHCP 在线；实机将一个非活动订阅临时改名后恢复原名，保存和列表更新通过。实机截图仅私下保存。公开演示与测试均使用虚构数据。完整 CI 和发布附件以新 tag 对应 Actions/Release 为准。
