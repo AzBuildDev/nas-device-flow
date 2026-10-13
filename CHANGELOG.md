@@ -1,3 +1,11 @@
+# 0.2.2
+
+- Show selected-node check results, latency, last check time and optional subscription expiry/quota information in all six languages.
+- Distinguish loaded nodes from a successful recent check. Missing results and results older than ten minutes remain unverified; inactive subscriptions are not tested automatically.
+- Add an authenticated, CSRF-protected Check routes action for the loaded usual and OpenAI providers, without reloading configuration or changing assignments.
+- Validation: 136 source tests. Browser and installed-controller checks are recorded in release-readiness.md.
+- Upgrade only the controller image while retaining runtime mounts and networks. No setup rerun or policy migration is required. IPv6 remains unsupported.
+
 # 0.2.1
 
 - Rename any saved subscription directly in its list row, including the default and OpenAI-assigned subscriptions.

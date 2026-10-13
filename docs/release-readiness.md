@@ -1,8 +1,8 @@
 # 发布候选验收
 
-This file records historical RC checks and later release evidence. For the current 0.2.1 installation steps and support limits, use the [NAS GUI guide](nas-gui-install.md) and [compatibility notes](compatibility.md). A regular release does not establish compatibility with untested hardware.
+This file records historical RC checks and later release evidence. For the current 0.2.2 installation steps and support limits, use the [NAS GUI guide](nas-gui-install.md) and [compatibility notes](compatibility.md). A regular release does not establish compatibility with untested hardware.
 
-版本：0.2.1。日期：2026-10-14。
+版本：0.2.2。日期：2026-10-14。
 
 ## 已完成
 
@@ -75,3 +75,8 @@ rc.4 创建独立 tag、GitHub prerelease 和源码包、SHA256 manifest，不�
 123 项本地源码测试通过。新增测试覆盖常用/专用订阅改名只更新 name、绑定与 URL 保留、刷新重读持久化、名称边界、写入失败、HTTP 认证/CSRF，以及无需调用核心重载。六语字段覆盖和前端语法检查通过。浏览器、现场更新和完整 CI 结果在验证后记录，不以测试数量代替实际运行证据。
 
 浏览器虚构演示验证常用订阅改名、专用订阅改名后选择同步、空白名称拒绝和取消。原 NAS 已更新兼容控制器0.2.1，保留原双 Docker 网络、IP/MAC、runtime 挂载和限制；升级前后私有注册表与既有设备策略逐项核对相同。面板确认核心与 DHCP 在线；实机将一个非活动订阅临时改名后恢复原名，保存和列表更新通过。实机截图仅私下保存。公开演示与测试均使用虚构数据。完整 CI 和发布附件以新 tag 对应 Actions/Release 为准。
+
+
+## v0.2.2 订阅状态
+
+136 项源码测试通过，覆盖当前节点失败、无检测历史、过期结果、直连选择、账户信息缺失、到期和额度耗尽，以及检测接口认证、CSRF 和不重载核心。六语言文字和虚构浏览器演示通过；检测按钮更新检测时间并显示完成结果。原 NAS 的兼容控制器已更新至 0.2.2，升级前后注册表、订阅用途和设备策略一致，保留双 Docker 网络、LAN IP/MAC、挂载及限制，核心持续在线。原 LAN 的 Windows 用户确认国外访问恢复，修复的是上游 IPv6 DNS 广播冲突；IPv6 代理仍不在支持范围内。实机检测按钮更新了常用及 OpenAI 节点的时间和延迟，两个检测目标均通过。最终 CI 和镜像附件证据由本版本 tag 的 Actions/Release 提供，发布前需确认成功。

@@ -29,7 +29,7 @@ Dedicated rules run before domestic/default rules, inside the existing enabled-d
 
 ## Upgrade
 
-Update the controller image to `ghcr.io/azbuilddev/nas-device-flow-controller:0.2.1` while retaining your runtime mounts and networks. Do not rerun setup. Existing deployments keep their single-subscription behavior until an administrator assigns an OpenAI subscription. Device switches, DHCP settings and stored credentials remain in the existing private runtime.
+Update the controller image to `ghcr.io/azbuilddev/nas-device-flow-controller:0.2.2` while retaining your runtime mounts and networks. Do not rerun setup. Existing deployments keep their single-subscription behavior until an administrator assigns an OpenAI subscription. Device switches, DHCP settings and stored credentials remain in the existing private runtime.
 
 ## 中文操作
 
@@ -40,3 +40,12 @@ Update the controller image to `ghcr.io/azbuilddev/nas-device-flow-controller:0.
 专用选择会保存，切换常用订阅不会覆盖它。「更新已用订阅」同时更新两份。删除专用订阅前，先选择「跟随常用订阅」并保存。修改失败会恢复旧配置；专用组没有可用代理成员时拒绝对应请求，不自动改走常用订阅。已有长连接可能沿用旧出口，重新打开应用后验证。
 
 升级只更新控制器镜像，保留 runtime 挂载和原网络，不重新运行安装向导。未设置专用订阅的已有用户维持原行为。
+
+
+## Subscription status
+
+Expand Subscriptions to see the current node's latest provider check. Check routes tests the loaded usual and OpenAI providers against their configured check target. It does not download a subscription or change routing. A passing result establishes reachability of that target, not every website. Results older than ten minutes, missing history and unloaded nodes are shown separately. Inactive subscriptions are not tested automatically.
+
+Expiry and remaining quota appear only when the provider supplies usable account metadata. Missing metadata does not mean an expired account. A successful node check and an expired-account warning can coexist.
+
+For IPv4-only deployments, an upstream router advertising its own IPv6 DNS can bypass the NAS DNS path. Check the client's DNS list and the router's IPv6 advertisements when IPv4 gateway settings look correct but proxy traffic fails. The original Windows deployment recovered after disabling the conflicting upstream IPv6 service and renewing the client connection. This is a deployment-specific fix, not support for IPv6 proxy routing.

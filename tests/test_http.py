@@ -145,4 +145,19 @@ class HTTPTests(unittest.TestCase):
   self.assertEqual(registry.load()['items'][0]['name'],'Personal name')
   self.assertEqual(registry.load()['active'],'original')
   self.assertEqual((c.DATA/'subscriptions.json').stat().st_mode & 0o777,0o600)
+ def test_healthcheck_requires_auth_csrf_and_does_not_reload_core(self):
+  from subscriptions import Subscriptions
+  (c.DATA/'base.yaml').write_text('proxy-providers:\n  subscription:\n    url: https://example.invalid/default.yaml\n')
+  registry=Subscriptions(c.DATA,c.atomic);registry.set_openai('original',lambda:None)
+  payload={'action':'healthcheck'};auth=self.auth()
+  self.assertEqual(self.request('/api/subscriptions',payload)[0],401)
+  self.assertEqual(self.request('/api/subscriptions',payload,{'Cookie':auth['Cookie']})[0],403)
+  with patch.object(c,'core') as core,patch.object(c,'subscription_apply') as apply:
+   self.assertEqual(self.request('/api/subscriptions',payload,auth)[0],200)
+   self.assertEqual([x.args for x in core.call_args_list],[('/providers/proxies/subscription/healthcheck',),('/providers/proxies/ndf-openai/healthcheck',)])
+   apply.assert_not_called()
+  with patch.object(c,'core',side_effect=OSError('do not expose private token')):
+   status,_,body=self.request('/api/subscriptions',payload,auth)
+   self.assertEqual(status,503);self.assertNotIn(b'private token',body)
+  self.assertEqual(registry.load()['active'],'original')
 if __name__=='__main__':unittest.main()

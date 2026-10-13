@@ -53,7 +53,7 @@ macOS, Windows, phones and tablets use the browser as clients; the gateway runs 
 
 ## 🧪 Project status
 
-v0.2.1 adds optional OpenAI subscription routing, within the supported scope below. The original setup is running on a UGREEN DXP4800 with UGOS Pro, a bonded interface and a Huawei TC7102. Source tests and isolated container/DHCP checks cover the generalized package; a fresh networked installation on another LAN still needs validation. OpenWrt and MikroTik device-name adapters have mock tests only.
+v0.2.2 includes optional OpenAI subscription routing and subscription check status, within the supported scope below. The original setup is running on a UGREEN DXP4800 with UGOS Pro, a bonded interface and a Huawei TC7102. Source tests and isolated container/DHCP checks cover the generalized package; a fresh networked installation on another LAN still needs validation. OpenWrt and MikroTik device-name adapters have mock tests only.
 
 A switch means a policy is configured. It does not prove the client is using the NAS gateway or that a website is reachable. See [connection diagnostics](docs/diagnostics.md) and [compatibility notes](docs/compatibility.md).
 

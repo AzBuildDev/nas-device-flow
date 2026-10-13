@@ -96,7 +96,7 @@ def deployment_compose(config, parent, template=None, folder=None):
     compose = yaml.safe_load(Path(template).read_text())
     services = compose['services']
     services['controller'].pop('build', None)
-    services['controller']['image'] = 'ghcr.io/azbuilddev/nas-device-flow-controller:0.2.1'
+    services['controller']['image'] = 'ghcr.io/azbuilddev/nas-device-flow-controller:0.2.2'
     # Use the release's pinned core image; do not carry ${...} into a GUI import.
     services['mihomo']['image'] = services['mihomo']['image'].split(':-', 1)[1].removesuffix('}')
     for name, address, target in (('mihomo', config['core_ip'], '/root/.config/mihomo'),
@@ -138,7 +138,7 @@ def allowed_hosts():
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = 'NASDeviceFlowSetup/0.2.1'
+    server_version = 'NASDeviceFlowSetup/0.2.2'
 
     def setup(self):
         super().setup()

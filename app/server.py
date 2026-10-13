@@ -12,6 +12,7 @@ from router_adapters import create_client
 from traffic_stats import TrafficStats
 from device_traffic import DeviceTraffic, proxy_nodes, ip_owners
 from subscriptions import Subscriptions
+from subscription_status import provider_status
 from service_routing import compile_openai, read_registry, validate_openai_core, OPENAI_PROVIDER, OPENAI_GROUP
 from urllib.parse import quote
 from settings import Settings
@@ -180,22 +181,22 @@ def subscription_apply():
 
 def subscription_info():
     with LOCK: result=Subscriptions(DATA,atomic,SETTINGS.provider).summaries()
-    result.update(available=False,node='',node_count=0,updated='',usage=None)
+    result.update(available=False,node='',node_count=0,updated='',usage=None,health=provider_status(None,''))
     try:
         provider=core('/providers/proxies/'+quote(SETTINGS.provider,safe=''))
         selected=core('/proxies/'+quote(SETTINGS.proxy_group,safe='')).get('now','')
         if selected==SETTINGS.auto_group: selected=core('/proxies/'+quote(SETTINGS.auto_group,safe='')).get('now',SETTINGS.auto_group)
         usage=provider.get('subscriptionInfo')
         if isinstance(usage,dict): usage={k:usage[k] for k in ('Upload','Download','Total','Expire') if isinstance(usage.get(k),(int,float))}
-        result.update(available=True,node=selected,node_count=len(provider.get('proxies') or []),updated=provider.get('updatedAt',''),usage=usage)
+        result.update(available=bool(provider.get('proxies')),node=selected,node_count=len(provider.get('proxies') or []),updated=provider.get('updatedAt',''),usage=usage,health=provider_status(provider,selected))
     except Exception: pass
-    result['openai']={'enabled':bool(result['openai_subscription']),'available':False,'node':'','node_count':0}
+    result['openai']={'enabled':bool(result['openai_subscription']),'available':False,'node':'','node_count':0,'health':provider_status(None,'')}
     if result['openai_subscription']:
         try:
             provider=core('/providers/proxies/'+OPENAI_PROVIDER)
             selected=core('/proxies/'+OPENAI_GROUP).get('now','')
             nodes=provider.get('proxies') or []
-            result['openai'].update(available=selected in {x.get('name') for x in nodes},node=selected,node_count=len(nodes))
+            result['openai'].update(available=selected in {x.get('name') for x in nodes},node=selected,node_count=len(nodes),health=provider_status(provider,selected))
         except Exception:pass
     return result
 
@@ -273,7 +274,7 @@ def dhcp_supervisor():
         time.sleep(3)
 
 class Handler(BaseHTTPRequestHandler):
-    server_version='NASDeviceFlow/0.2.1'
+    server_version='NASDeviceFlow/0.2.2'
     def log_message(self,*args): pass
     def send(self,status,body,ctype='application/json',cookie=None):
         data=body.encode() if isinstance(body,str) else json.dumps(body,ensure_ascii=False).encode()
@@ -294,7 +295,7 @@ class Handler(BaseHTTPRequestHandler):
         if not s: return self.send(401,{'error':'请登录'})
         if self.path=='/api/settings':
             with LOCK: preferences=load_preferences(DATA)
-            return self.send(200,{'preferences':preferences,'gateway':SETTINGS.core_ip,'upstream':SETTINGS.upstream,'panel_ip':SETTINGS.panel_ip,'subnet':SETTINGS.subnet,'routing':'China direct / other destinations via PROXY','app_version':'0.2.1','dhcp':dhcp_status(),'csrf':s['csrf']})
+            return self.send(200,{'preferences':preferences,'gateway':SETTINGS.core_ip,'upstream':SETTINGS.upstream,'panel_ip':SETTINGS.panel_ip,'subnet':SETTINGS.subnet,'routing':'China direct / other destinations via PROXY','app_version':'0.2.2','dhcp':dhcp_status(),'csrf':s['csrf']})
         if self.path=='/api/subscriptions':
             try: return self.send(200,subscription_info())
             except Exception: return self.send(503,{'error':'订阅信息读取失败'})
@@ -390,6 +391,11 @@ class Handler(BaseHTTPRequestHandler):
                     elif action=='remove': registry.remove(body.get('id'))
                     elif action=='switch': registry.switch(body.get('id'),subscription_apply)
                     elif action=='set-openai': registry.set_openai(body.get('id'),subscription_apply)
+                    elif action=='healthcheck':
+                        try:
+                            core('/providers/proxies/'+quote(SETTINGS.provider,safe='')+'/healthcheck')
+                            if registry.summaries()['openai_subscription']:core('/providers/proxies/'+OPENAI_PROVIDER+'/healthcheck')
+                        except Exception:raise RuntimeError('线路检测失败，请检查核心连接') from None
                     elif action=='refresh':
                         core('/providers/proxies/'+quote(SETTINGS.provider,safe=''),'PUT')
                         if registry.summaries()['openai_subscription']:core('/providers/proxies/'+OPENAI_PROVIDER,'PUT')
