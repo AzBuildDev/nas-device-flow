@@ -6,7 +6,7 @@ This runs the existing Linux controller and Mihomo inside a Linux VM on an alway
 
 ## Feasibility and architecture
 
-The observed Windows edition is Windows 11 Pro for Workstations with CPU virtualization enabled; Hyper-V is not enabled. Two active Realtek USB 2.5GbE adapters and Tailscale plus Cisco/TAP adapters require route and driver review. This is evidence of prerequisites only. No VM, external switch, multi-MAC bridge or end-to-end gateway has been accepted on this machine.
+The candidate requires a Windows edition with Hyper-V support and firmware virtualization enabled. Operators must inspect their own wired adapters, drivers and VPN routes. Read-only checks on one development host establish prerequisites only; no VM, external switch, multi-MAC bridge or end-to-end gateway has been accepted.
 
 Chosen candidate: Hyper-V Generation 2 x86-64 Linux VM, a separately approved **wired external switch**, rootful Docker Engine and Compose v2 inside Linux, then the existing macvlan Compose services. Docker Desktop/WSL NAT is not a substitute: a reachable web panel does not make clients' packets pass through it. Hyper-V enabling/reboot, switch creation and physical bindings require a separate, concrete confirmation; supplied tools never perform them. Windows Home and other hypervisors have no validated fallback in this preview.
 

@@ -77,3 +77,7 @@ v0.2.2 包含可选的 OpenAI 专用订阅及订阅检测状态，支持范围�
 ![虚构英文深色演示](docs/images/demo-dark.jpg)
 
 v0.2.2 的支持范围与验证限制仍以上文为准。其他 NAS 的全新局域网安装尚未完成实机验收，IPv6 和自动故障切换不支持。
+
+## Windows 独立网关开发预览
+
+在 Windows 的 Linux 虚拟机内承载网关，替代 NAS；当前仅提供开发与隔离测试工具，尚未验收全屋接管，不是正式安装包。详见[中文指南](docs/windows-gateway.zh-CN.md)和[验证记录](docs/windows-validation.md)。

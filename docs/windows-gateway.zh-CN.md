@@ -6,7 +6,7 @@ Windows 长期开机，在本机 Linux 虚拟机内运行既有控制器和 Miho
 
 ## 可行性与选定架构
 
-现场只读结果：Windows 11 Pro for Workstations，CPU 虚拟化已启用，Hyper-V 尚未启用；有两块活动 Realtek USB 2.5GbE 网卡，以及 Tailscale、Cisco/TAP 虚拟网卡。仅能确认部分先决条件，尚未证明外部交换机、额外 MAC、容器网络和真实流量路径可用。
+候选方案需要支持 Hyper-V 的 Windows 版本及已启用的固件虚拟化。请自行盘点目标电脑的有线网卡、驱动和 VPN 路由。开发电脑的只读检查仅说明部分先决条件，尚未证明外部交换机、多 MAC 桥接或端到端网关可用。
 
 候选架构为 Hyper-V 第二代 x86-64 Linux VM，经**另行确认的有线外部交换机**接入 LAN，Linux 内使用 rootful Docker Engine 和 Compose v2，复用原有 macvlan 容器后端。Docker Desktop/WSL 的 NAT 不等于局域网网关；面板能打开不能证明客户端流量被接管。启用 Hyper-V、重启、创建交换机、修改物理绑定均须单独说明风险和确认，交付脚本不执行这些操作。Windows Home 或其他虚拟化平台没有经过验证的替代路线。
 
