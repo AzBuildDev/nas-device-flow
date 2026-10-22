@@ -1,3 +1,4 @@
+Windows local gateway development preview: [English](docs/windows-gateway.en.md) | [简体中文](docs/windows-gateway.zh-CN.md). Version 0.2.3-windows-preview.1 uses a wired bridged Linux VM; production handover is not validated. The NAS v0.2.2 backend remains unchanged.
 # 🧭 NAS Device Flow
 
 **Per-device smart routing for your home network.**
