@@ -1,3 +1,10 @@
+# Unreleased: macOS gateway development preview
+
+- Add Mac host preflight and validated Lima bridged-VM configuration generation.
+- Keep Linux/Mihomo routing inside the VM; Docker Desktop cannot supply this gateway architecture.
+- Add guest preparation, rollback documentation and a Windows implementation handoff.
+- Not a production release: physical bridge, nested macvlan, real-client routing and DHCP handover remain unverified. NAS controller stays at 0.2.2; no release tag or installer binary is produced.
+
 # 0.2.2
 
 - Show selected-node check results, latency, last check time and optional subscription expiry/quota information in all six languages.

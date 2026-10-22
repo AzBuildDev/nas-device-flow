@@ -1,0 +1,16 @@
+name: macOS gateway preview checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  preflight:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: sh -n scripts/macos/preflight.sh
+      - run: python3 -m unittest discover -s tests -p test_macos_vm_config.py -v
+      - run: sh scripts/macos/preflight.sh > /tmp/ndf-preflight.json
+      - run: python3 -c 'import json; json.load(open("/tmp/ndf-preflight.json"))'

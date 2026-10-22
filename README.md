@@ -25,6 +25,10 @@ All six interface languages ship in one package. The initial language follows th
 
 ![Fictional English demo in dark mode](docs/images/demo-dark.jpg)
 
+## Standalone macOS gateway (development preview)
+
+The goal is to run the panel and Mihomo inside a bridged Linux VM on a Mac, replacing the NAS as the per-device LAN gateway. Read-only preflight and VM configuration generation are available. Wired bridging, nested MAC forwarding and real-client routing are not yet validated; this is not a ready-to-use whole-home installer. See the [Mac development guide](docs/macos.en.md).
+
 ## 👀 Try the demo
 
 ```sh

@@ -9,3 +9,8 @@ dist/
 *.local.json
 .ndf-install.lock
 .ndf-install-*/
+
+# Native macOS builds
+macos/.build/
+macos/.swiftpm/
+.DS_Store
