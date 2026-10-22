@@ -1,3 +1,11 @@
+## 0.2.3-windows-preview.1 (development preview)
+
+- Add Windows read-only inventory and private offline IPv4 recovery tools.
+- Add explicit-confirmation, existing-wired-switch Linux VM creation (VM remains OFF).
+- Reuse the v0.2.2 controller/UI/Mihomo/Compose; no remote NAS dependency or backend fork.
+- Add guest prerequisite checks, DHCP/startup gates and validation-before-start.
+- Add reproducible tracked-source packaging, deployment safety tests and bilingual instructions.
+- No production handover, real VM bridge, IPv6, DHCP fail-stop, physical restore or throughput acceptance. Hyper-V is disabled on the inspected host; these remain release blockers.
 # 0.2.2
 
 - Show selected-node check results, latency, last check time and optional subscription expiry/quota information in all six languages.
